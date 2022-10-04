@@ -1,0 +1,9 @@
+[submodule "Assets/Modules/xNode"]
+	path = Assets/Modules/xNode
+	url = https://github.com/EppuSyyrakki/xNode.git
+[submodule "Assets/Modules/SerializableDictionary"]
+	path = Assets/Modules/SerializableDictionary
+	url = https://github.com/EppuSyyrakki/Unity-SerializableDictionary.git
+[submodule "Assets/Modules/NaughtyAttributes"]
+	path = Assets/Modules/NaughtyAttributes
+	url = https://github.com/EppuSyyrakki/NaughtyAttributes.git
