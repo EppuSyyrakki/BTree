@@ -1,4 +1,4 @@
-﻿using BTree.Agent;
+﻿using TypeReferences;
 using UnityEngine;
 using XNode;
 
@@ -9,25 +9,31 @@ namespace BTree
 	/// Has no children / input ports.
 	/// </summary>
 	[NodeTint(0.15f, 0.175f, 0.15f)]
-	public class Leaf : TreeNode
+	public class ActionNode : TreeNode
 	{
+		[SerializeField, Tooltip("Negative value means indefinite.")]
+		protected float maxDuration = -1f;
+
+        protected TreeResult CurrentResult;
+
 		[SerializeField]
-		protected float maxDuration = 10f;
+		[Inherits(typeof(AgentAction), ShortName = true), TypeOptions(ExpandAllFolders = true)]
+		private TypeReference returnClass;
 
-		protected NodeResult CurrentResult;
+		public float MaxDuration => maxDuration;
 
-		public AgentState GetState(BTreeAgent agent)
+		public AgentAction GetAction()
 		{
-
-		}
+			return System.Activator.CreateInstance(returnClass) as AgentAction;
+        }
 
 		public override void ResetNode()
 		{
 			base.ResetNode();
-			CurrentResult = new NodeResult(this, Result.Running);
+			CurrentResult = new TreeResult(this, Result.Running);
 		}
 
-		public override void Setup(SceneTree t)
+		public override void Setup(Tree t)
 		{
 			ResetNode();
 

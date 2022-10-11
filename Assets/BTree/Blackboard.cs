@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace BTree.Agent
+namespace BTree
 {
     public class BlackboardDictionary : SerializableDictionary<BlackboardVariable, float> { }
     public class SettingDictionary : SerializableDictionary<BlackboardVariable, bool> { }

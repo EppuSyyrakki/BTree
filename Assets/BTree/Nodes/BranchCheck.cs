@@ -21,9 +21,9 @@ namespace BTree.Nodes
 			// Check to prevent editor errors
 			if (Tree == null) { return null; }
 
-			NodeResult result = DynamicInputs.Any() ? GetFirstChildResult() : new NodeResult(this, Result.Success);
+			TreeResult result = DynamicInputs.Any() ? GetResult() : new TreeResult(this, Result.Success);
 			
-			if (Tree.Agent.Blackboard.GetValue(blackboardVariable) < 1)
+			if (Tree.Blackboard.GetValue(blackboardVariable) < 1)
 			{
 				result.Value = Result.Failure;
 			}

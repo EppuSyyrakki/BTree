@@ -8,11 +8,11 @@ namespace BTree
 	public class RootNode : TreeNode
 	{
 		[Input(connectionType = ConnectionType.Override)]
-		public NodeResult childPort;
+		public TreeResult childPort;
 
 		public override object GetValue(NodePort port)
 		{
-			var result = GetFirstChildResult();
+			var result = GetResult();
 
 			if (result == null) { return null; }
 

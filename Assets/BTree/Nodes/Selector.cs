@@ -40,7 +40,7 @@ namespace BTree.Nodes
 				_index++;
 			}
 
-			return new NodeResult(this, Result.Failure);
+			return new TreeResult(this, Result.Failure);
 		}
 	}
 }

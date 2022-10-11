@@ -7,7 +7,7 @@ namespace BTree
 	/// Wrapper to make node results nullable and transport the origin leaf through the tree.
 	/// </summary>
 	[System.Serializable]
-	public class NodeResult : object
+	public class TreeResult : object
 	{
 		public TreeNode Origin
 		{
@@ -15,19 +15,19 @@ namespace BTree
 			set => Path[0] = value;
 		}
 
-		public Leaf OriginAsLeaf
+		public ActionNode OriginAsActionNode
 		{
 			get
 			{
-				Assert.IsTrue(Origin is Leaf);
-				return Path[0] as Leaf;
+				Assert.IsTrue(Origin is ActionNode);
+				return Path[0] as ActionNode;
 			}
 		}
 
 		public Result Value { get; set; }
 		public List<TreeNode> Path { get; private set; }
 		
-		public NodeResult(TreeNode origin, Result result)
+		public TreeResult(TreeNode origin, Result result)
 		{
 			Path = new List<TreeNode>();
 			Path.Add(origin);

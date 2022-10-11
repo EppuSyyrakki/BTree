@@ -5,16 +5,16 @@ using XNode;
 
 namespace BTree
 {
-	[NodeWidth(250)]
+	[NodeWidth(300)]
 	public abstract class TreeNode : Node
 	{
 		[SerializeField, Tooltip("A visual representation of the value received from children")]
 		protected Result graphResult;
 
 		[Output(connectionType = ConnectionType.Override)]
-		public NodeResult parentPort;
+		public TreeResult parentPort;
 		
-		protected SceneTree Tree;
+		protected Tree Tree;
 
 		[HideInInspector]
 		public TreeNode parent;
@@ -25,7 +25,7 @@ namespace BTree
 		/// Use this instead of Node.Init() to reset all variables and get child node(s).
 		/// <param name="t">The tree that has this node in it.</param>
 		/// </summary>
-		public virtual void Setup(SceneTree t)
+		public virtual void Setup(Tree t)
 		{
 			children = GetChildNodes();
 
@@ -57,7 +57,7 @@ namespace BTree
 		/// Convenience method to get index 0 child.
 		/// </summary>
 		/// <returns></returns>
-		public NodeResult GetFirstChildResult()
+		public TreeResult GetResult()
 		{
 			return GetChildResultAtIndex(0);
 		}
@@ -66,14 +66,14 @@ namespace BTree
 		/// Get value (result) from first connected child.
 		/// </summary>
 		/// <returns>The result of the first child node. Null if no children found.</returns>
-		protected NodeResult GetChildResultAtIndex(int i)
+		protected TreeResult GetChildResultAtIndex(int i)
 		{
 			if (children == null || children.Length == 0) { return null; }  // Check to prevent editor errors
 
 			// Fetch the port on the child that leads to this node and return the value it gets.
 			var child = children[i];
 			var childOutput = child.GetOutputPort(nameof(child.parentPort));
-			var result = child.GetValue(childOutput) as NodeResult;
+			var result = child.GetValue(childOutput) as TreeResult;
 			return result;
 		}
 

@@ -8,6 +8,6 @@
 	public abstract class Branch : TreeNode
 	{
 		[Input(dynamicPortList: true, connectionType = ConnectionType.Override)]
-		public NodeResult childPort;
+		public TreeResult childPort;
 	}
 }

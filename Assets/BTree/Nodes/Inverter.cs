@@ -8,7 +8,7 @@ namespace BTree.Nodes
 	{
 		public override object GetValue(NodePort port)
 		{
-			var result = GetFirstChildResult();
+			var result = GetResult();
 
 			if (result == null)
 			{

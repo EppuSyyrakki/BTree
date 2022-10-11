@@ -33,7 +33,7 @@ namespace BTree.Nodes
 			return Resolve(result);
 		}
 
-		private NodeResult Resolve(NodeResult result)
+		private TreeResult Resolve(TreeResult result)
 		{
 			if (result.Value == Result.Running)
 			{

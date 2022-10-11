@@ -8,9 +8,8 @@ namespace BTree
 	/// </summary>
 	[CreateAssetMenu(fileName = "New Behaviour Tree", menuName = "BTree/New Behaviour Tree")]
 	[RequireNode(typeof(RootNode))]
-	public class BehaviourTreeAsset : NodeGraph
-	{
-		
+	public class TreeAsset : NodeGraph
+	{		
 	}
 }
 
