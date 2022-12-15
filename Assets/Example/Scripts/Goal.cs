@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BTree;
 using System;
+using TMPro;
 
 public class Goal : MonoBehaviour, ITreeContext
 {
@@ -12,23 +13,32 @@ public class Goal : MonoBehaviour, ITreeContext
     [SerializeField]
     private LayerMask ballLayer;
 
-    private Light goalLight;
+    [SerializeField]
+    private TMP_Text opponentScoreLabel;
 
+    private Light goalLight;
     private BallSpawner spawner = null;
-    private List<Player> players = null;
+    private int scoredToThis = 0;
 
     private void Awake()
     {
         goalLight = GetComponent<Light>();
         goalLight.enabled = false;
         spawner = FindObjectOfType<BallSpawner>();
-        players = new List<Player>(FindObjectsOfType<Player>());
+        var players = new List<Player>(FindObjectsOfType<Player>());
+
+        foreach (var p in players)
+        {
+            AssignToPlayer(p);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Ball b) && !b.Scored)
         {
+            scoredToThis++;
+            opponentScoreLabel.text = scoredToThis.ToString();
             b.Scored = true;
             StartCoroutine(FlashLight(b));
         }
@@ -47,5 +57,16 @@ public class Goal : MonoBehaviour, ITreeContext
         }
 
         Destroy(ball.gameObject);
+    }
+
+    private void AssignToPlayer(Player p)
+    {
+        if (p.Side == team)
+        {
+            p.OwnGoal = this;
+            return;
+        }
+
+        p.OpponentGoal = this;
     }
 }

@@ -10,17 +10,18 @@ namespace BTree.Nodes
 	/// </summary>
 	public class Sequence : Branch
 	{
-		private int _index;
-		private bool HasNextChild => _index + 1 < children.Length;
+		private int index;
+		private bool HasNextChild => index + 1 < children.Length;
 
 		internal override void ResetNode()
 		{
-			_index = 0;
+			index = 0;
 		}
 
 		public override object GetValue(NodePort port)
 		{
- 			var result = GetChildResultAtIndex(_index);
+			index = 0;
+ 			var result = GetChildResultAtIndex(index);
 
 			if (result == null)
 			{
@@ -43,10 +44,10 @@ namespace BTree.Nodes
 			{
 				if (HasNextChild)
 				{
-					// Child succeeded but there is more children to go through so return running.
-					_index++;
-					result = GetChildResultAtIndex(_index);
-					return result;
+					// Child succeeded but there is more children to go through so check them.
+					index++;
+					result = GetChildResultAtIndex(index);
+					return Resolve(result);
 				}
 
 				// This is the last child, set success.

@@ -28,8 +28,10 @@ namespace BTree.Nodes
 				return null;
 			}
 
-			if (result.Value == Result.Success)
+			if (result.Value != Result.Running)
 			{
+
+
 				if (repeat <= 0 || _counter < repeat)
 				{
 					_counter++;

@@ -59,10 +59,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5571393896695726556, guid: 4ea15660174068c4496cfcec0f2ccf01, type: 3}
-      propertyPath: treeAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: bc9fca4caab59d042a6750dddb7057fc, type: 2}
     - target: {fileID: 6545860917470056520, guid: 4ea15660174068c4496cfcec0f2ccf01, type: 3}
       propertyPath: m_Name
       value: BlueDefender

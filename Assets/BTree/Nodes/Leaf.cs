@@ -25,12 +25,25 @@ namespace BTree
 
         private float elapsed = 0;		
         private TreeResult currentResult;
+		private T context;
 
-		protected T context;
-		protected TreeAgent agent;
+		protected TreeAgent Agent { get; private set; }
 
-        public ITreeContext Context => context;
-        public float MaxDuration => maxDuration;
+        protected T Context
+        {
+            get
+            {
+                if (context is NoContext)
+                {
+                    Debug.LogError($"{this} trying to use context while having NoContext type");
+                    return null;
+                }
+
+                return context;
+            }
+            set => context = value;
+        }
+
 		public Result Result
 		{
 			get => currentResult.Value;
@@ -39,13 +52,14 @@ namespace BTree
 
         /// <summary>
         /// Override this to create actionable nodes that get sent to the agent after the tree is evaluated. 
-        /// The base implementation only advances the timer.
+        /// The base implementation only advances the timer. To create a simple check node without exection
+        /// this needs an empty override.
         /// </summary>
         public virtual void Execute()
         {
             elapsed += Time.deltaTime;
 
-            if (elapsed > maxDuration)
+            if (maxDuration > 0 && elapsed > maxDuration)
             {
                 Result = Result.Failure;
             }
@@ -54,7 +68,7 @@ namespace BTree
 		public void Enter(TreeAgent agent)
 		{
             elapsed = 0;
-            this.agent = agent;
+            this.Agent = agent;
 
             if (!String.IsNullOrEmpty(inContext))
             {
@@ -64,7 +78,11 @@ namespace BTree
                 }
                 else
                 {
-                    Debug.LogWarning($"{agent.gameObject} TreeAgent: Could not find {this} InputVariable {inContext}.");
+                    if (tree.debugTree)
+                    {
+                        Debug.LogWarning($"{agent.gameObject} TreeAgent: Could not find {this} InputVariable {inContext}.");
+                    }
+                    
                     Result = Result.Failure;
                 }
             }
@@ -86,13 +104,20 @@ namespace BTree
             {
                 if (context == null)
                 {
-                    Debug.LogWarning($"{agent.gameObject} TreeAgent: context {outContext} not set.");
+                    if (tree.debugTree)
+                    {
+                        Debug.LogWarning($"{Agent.gameObject.name} TreeAgent: context {outContext} not set.");
+                    }
+                    
                     return;
                 }
 
                 if (!tree.TryAddContext(outContext, context, overwriteOut))
                 {
-                    Debug.LogWarning($"{agent.gameObject} TreeAgent: variable {outContext} already exists.");
+                    if (tree.debugTree)
+                    {
+                        Debug.LogWarning($"{Agent.gameObject.name} TreeAgent: context {outContext} already exists.");
+                    }                   
                 }                
             }   
         }
@@ -113,7 +138,7 @@ namespace BTree
 		{
             currentResult = new TreeResult(this, Result.Running);
             context = null;
-            agent = null;
+            Agent = null;
             elapsed = 0;
             ResetLeaf();
 		}

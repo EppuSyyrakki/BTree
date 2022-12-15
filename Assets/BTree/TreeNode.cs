@@ -53,7 +53,7 @@ namespace BTree
 		/// Convenience method to get index 0 child.
 		/// </summary>
 		/// <returns></returns>
-		public TreeResult GetResult()
+		protected TreeResult GetResult()
 		{
 			Assert.IsTrue(children?.Length <= 1, "Can't use GetResult on a node with more than 1 child!");
 			return GetChildResultAtIndex(0);

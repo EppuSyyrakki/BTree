@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Example of using the Out Context field on the node.
 /// </summary>
-public class MoveToBall : Leaf<NoContext>
+public class MoveToDefend : Leaf<NoContext>
 {
     private Player player;
     private Vector3 target;
@@ -19,6 +19,8 @@ public class MoveToBall : Leaf<NoContext>
 
     public override void Execute()
     {
+        base.Execute();
+
         if (player.Ball == null)
         {
             Result = Result.Failure;
@@ -36,8 +38,6 @@ public class MoveToBall : Leaf<NoContext>
         {           
             Result = Result.Success;
         }
-
-        base.Execute();
     }
     protected override void OnExit()
     {
@@ -52,9 +52,7 @@ public class MoveToBall : Leaf<NoContext>
 
     private Vector3 GetLocation()
     {
-        var goalToBall = player.Ball.transform.position - player.OpponentGoal.transform.position;
-        var behindBall = player.Ball.transform.position + (goalToBall.normalized * 0.75f);
-
-        return behindBall;
+        Vector3 between = (player.Ball.transform.position - player.OwnGoal.transform.position) * 0.5f;
+        return player.OwnGoal.transform.position + between;
     }
 }

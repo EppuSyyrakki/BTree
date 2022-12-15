@@ -66,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 5571393896695726556, guid: 4ea15660174068c4496cfcec0f2ccf01, type: 3}
       propertyPath: treeAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 9ca0fab066a982c4e8fea3f1b51aab2d, type: 2}
+      objectReference: {fileID: 11400000, guid: 1421b01c8676bda4da0404659e5d246a, type: 2}
     - target: {fileID: 6545860917470056520, guid: 4ea15660174068c4496cfcec0f2ccf01, type: 3}
       propertyPath: m_Name
       value: RedAttacker

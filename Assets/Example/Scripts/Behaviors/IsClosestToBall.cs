@@ -6,7 +6,7 @@ using XNode;
 /// Example of using the GetValue method to check something in the game world while the Evaluate function is being
 /// run inside the Tree.
 /// </summary>
-public class IsBallControlled : Leaf<ITreeContext>
+public class IsClosestToBall : Leaf<NoContext>
 {
     protected override void OnEnter()
     {
@@ -25,7 +25,7 @@ public class IsBallControlled : Leaf<ITreeContext>
         var player = tree.agent as Player;
         var result = new TreeResult(this, Result.Failure);
 
-        if (IsFriendNearBall(player))
+        if (IsClosest(player))
         {
             result.Value = Result.Success;
         }
@@ -33,20 +33,27 @@ public class IsBallControlled : Leaf<ITreeContext>
         return result;
     }
 
-    private static bool IsFriendNearBall(Player player)
+    private static bool IsClosest(Player player)
     {
         if (player.Ball == null) { return false; }
 
-        var colliders = Physics.OverlapSphere(player.transform.position, 2f);
+        Vector3 ball = player.Ball.transform.position;
+        float self = (player.transform.position - ball).sqrMagnitude;
+        float closest = float.MaxValue;
 
-        foreach (var col in colliders)
-        {            
-            if (col.TryGetComponent<Player>(out var found)
-                && found != player
-                && found.Side == player.Side)
+        foreach (var p in player.TeamMates)
+        {
+            float friend = (p.transform.position - ball).sqrMagnitude;
+
+            if (friend < closest)
             {
-                 return true;            
+                closest = friend;
             }
+        }
+        
+        if (self < closest)
+        {
+            return true;
         }
 
         return false;

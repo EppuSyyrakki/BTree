@@ -82,23 +82,23 @@ namespace BTree
 		/// Recursively travel the tree to find Result.Running.
 		/// </summary>
 		/// <param name="leaf">The new leaf found from the tree. Null if nothing found.</param>
-		/// <returns>True if leaf found, false if not.</returns>
+		/// <returns>True if runnable leaf found, false if not.</returns>
 		internal bool Evaluate(out ILeaf leaf)
         {
 			if (debugTree) { Debug.Log(gameObject.name + " evaluating tree..."); }
+		
+            // Recursively travel the tree toward first running result.
+            var result = root.Result;
+            leaf = result?.Origin;
 
-			leaf = null;
-            var result = root.GetResult(); // Recursively travel the tree toward first running result.
-
-            if (result.Value == Result.Failure) 
+            if (result.Value != Result.Running) 
 			{
-                if (debugTree) { Debug.Log(gameObject.name + " found only a Failure result."); }
+                if (debugTree) { Debug.Log(gameObject.name + " received " + result.Value); }
                 return false;
 			}
 
             if (debugTree) { DebugResult(result); }
 
-			leaf = result.Origin;
 			return true;
         }
 

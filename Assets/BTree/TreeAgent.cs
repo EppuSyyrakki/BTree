@@ -8,8 +8,6 @@ namespace BTree
     {
         private Tree tree;
         private ILeaf current;
-
-        public ITreeContext Context => current?.Context;
  
         protected virtual void Awake()
         {

@@ -9,7 +9,6 @@
         void Execute();
         void Exit();
         Result Result { get; }
-        ITreeContext Context { get; }
         void Fail();
     }
 }

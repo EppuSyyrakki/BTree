@@ -8,37 +8,52 @@ namespace BTree.Nodes
 	/// </summary>
 	public class Selector : Branch
 	{
-		private int _index;
+		private int index;
 
-		private bool HasNextChild
-		{
-			get
-			{
-				if (children == null) { return false; }
-				return _index < children.Length;
-			}
-		}
+		private bool HasNextChild => index + 1 < children.Length;
 
-		internal override void ResetNode()
+        internal override void ResetNode()
 		{
-			_index = 0;
+			index = 0;
 		}
 
 		public override object GetValue(NodePort port)
 		{
-			while (HasNextChild)
-			{
-				var result = GetChildResultAtIndex(_index);
+            index = 0;
+            var result = GetChildResultAtIndex(index);
 
-				if (result.Value == Result.Running || result.Value == Result.Success)
-				{
-					return result;
-				}
+            if (result == null)
+            {
+                Debug.LogWarning(GetType() + " received a null value");
+                return null;
+            }
 
-				_index++;
-			}
+            return Resolve(result);
+        }
 
-			return new TreeResult(this, Result.Failure);
-		}
+		private TreeResult Resolve(TreeResult result)
+		{
+            if (result.Value == Result.Running)
+            {
+                // If child is running, send it on as is.
+                return result;
+            }
+
+            if (result.Value == Result.Failure)
+            {
+                if (HasNextChild)
+                {
+                    // Child failed but there is more children to go through so check them.
+                    index++;
+                    result = GetChildResultAtIndex(index);
+                    return Resolve(result);
+                }
+
+                // This is the last child, set success.
+                result.Value = Result.Failure;
+            }
+
+            return result;
+        }
 	}
 }

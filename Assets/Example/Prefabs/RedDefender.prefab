@@ -62,7 +62,7 @@ PrefabInstance:
     - target: {fileID: 5571393896695726556, guid: 4ea15660174068c4496cfcec0f2ccf01, type: 3}
       propertyPath: treeAsset
       value: 
-      objectReference: {fileID: 11400000, guid: bc9fca4caab59d042a6750dddb7057fc, type: 2}
+      objectReference: {fileID: 11400000, guid: 94271c92935a7174f885d9eefbf25683, type: 2}
     - target: {fileID: 6545860917470056520, guid: 4ea15660174068c4496cfcec0f2ccf01, type: 3}
       propertyPath: m_Name
       value: RedDefender

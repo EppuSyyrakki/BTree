@@ -11,14 +11,7 @@ namespace BTree
 		[SerializeField, Input(connectionType = ConnectionType.Override)]
 		public TreeResult input;
 
-		public override object GetValue(NodePort port)
-		{
-			TreeResult result = GetResult();
-
-			if (result == null) { return null; }
-
-			return result;
-		}
+		public TreeResult Result => GetResult();
 
 		internal override void ResetNode()
 		{

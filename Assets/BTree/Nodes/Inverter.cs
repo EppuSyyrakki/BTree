@@ -9,9 +9,8 @@ namespace BTree.Nodes
 		{
 			var result = GetResult();
 
-			if (result == null && tree != null)
+			if (result == null)
 			{
-				Debug.LogWarning("Inverter received a null value from child.");
 				return null;
 			}
 
