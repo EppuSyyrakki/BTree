@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BTree.Nodes;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using XNode;
-using Random = UnityEngine.Random;
 
 namespace BTree
 {
@@ -16,156 +12,127 @@ namespace BTree
         [SerializeField, Tooltip("Reference to the Behaviour Tree ScriptableObject")]
         private TreeAsset treeAsset;
 
-        [SerializeField, Tooltip("How often will the graph get evaluated")]
-        private float timer = 0.1f;
-
         private RootNode root;
-        private TreeResult currentResult;
-        private bool pathChanged;
-        private Timer evaluateTimer;
+		private Dictionary<string, ITreeContext> context;
+
+		internal TreeAgent agent;
 
         public bool debugTree = false;
-		public event Action<ActionNode> PathChanged;
-
-		public Blackboard Blackboard { get; internal set; }
 
 		private void Awake()
 		{
 			if (treeAsset == null)
 			{
 				Debug.LogError($"SceneTree on GameObject {name} has no TreeAsset assigned!");
+				return;
 			}
 			else
 			{
                 graph = treeAsset.Copy();
-            }
-			
-			evaluateTimer = new Timer(time: timer, autoReset: true, 
-				initialTime: Random.Range(0, timer));
-			evaluateTimer.Alarm += () => Evaluate(false);
-		}
-
-		private void Start()
-		{
-			InitGraph(); 
-			Evaluate(firstPass: true);
-		}
-
-		private void Update()
-		{
-			if (pathChanged)
-			{
-				PathChanged?.Invoke(currentResult.OriginAsActionNode);
-				pathChanged = false;
-			}
-
-			evaluateTimer.Update();
-		}
-
-		/// <summary>
-		/// Recursively travel the tree to find Result.Running. If found, invoke PathChanged event on next frame.
-		/// </summary>
-		/// <param name="firstPass">If true, forces the result to currentResult field.</param>
-		private void Evaluate(bool firstPass = false)
-		{
-			var result = root.GetResult(); // Recursively travel the tree toward first running result.
-
-			if (result.Value != Result.Running) { return; } // No runnable results found, ignore.
-
-			if (firstPass)
-			{
-                currentResult = result;
-                
-				if (debugTree) { DebugResult(result); }
-
-				return;
+				context = new Dictionary<string, ITreeContext>();
+				InitGraph();
             }
 
-			if (result.Path.SequenceEqual(currentResult.Path)) { return; }
-			
-			pathChanged = true;
-			ResetNodesExcept(result.Path);
-			currentResult = result; // Copy result path to current, invoke event on next Update.
-
-			if (debugTree) { DebugResult(result); }
-		}
-
-		private void ResetNodesExcept(List<TreeNode> except)
-		{
-			foreach (var node in graph.nodes)
-			{
-				var tn = node as TreeNode;
-
-				if (tn is Selector s)
-				{
-					s.ResetNode(); 
-					continue;
-				}
-
-				if (except.Contains(tn)) { continue; }
-					
-				tn.ResetNode();	// tn might be null but don't check - so we know where the problem is. 
-			}
+			agent = GetComponent<TreeAgent>();
 		}
 
 		private void DebugResult(TreeResult result)
 		{
-			string n = gameObject.name;
-
-			if (result == null)
-			{
-				Debug.LogWarning(n + " SceneTree result: null");
-				return;
-			}
-
-			if (result.Origin != null)
-			{
-				string path = "";
-
-				foreach (var node in result.Path)
-				{
-					path += " <- " + node.name;
-				}
-				
-				Debug.Log(n + " SceneTree result: " + result.Value + path);
+			if (result?.Origin != null)
+			{			
+				Debug.Log($"{gameObject.name} SceneTree result: {result.Value} from {result.Origin}");
 			}
 		}
 
-		private void InitGraph()
+        internal void Restart()
+        {
+			if (debugTree) { Debug.Log(gameObject.name + " is resetting its behavior tree."); }
+
+			context.Clear();
+
+            foreach (var n in graph.nodes)
+            {
+                var tn = n as TreeNode;
+                tn.ResetNode();
+            }
+        }
+
+        internal void InitGraph()
 		{
 			foreach (var n in graph.nodes)
 			{
 				var tn = n as TreeNode;
 
-				if (tn == null) { Debug.LogWarning(gameObject.name + " has non-TreeNode in their tree."); return; }
+				if (tn == null) 
+				{ 
+					Debug.LogError(gameObject.name + " has non-TreeNode in their tree."); 
+					return; 
+				}
 
-				if (tn is RootNode root) { this.root = root; }
+				if (tn is RootNode rootNode) 
+				{ 
+					root = rootNode; 
+				}
 
 				tn.Setup(this);
 			}
 		}
 
 		/// <summary>
-		/// 
+		/// Recursively travel the tree to find Result.Running.
 		/// </summary>
-		/// <returns></returns>
-		internal ActionNode GetActionNode()
-		{
-			var node = currentResult.OriginAsActionNode;
+		/// <param name="leaf">The new leaf found from the tree. Null if nothing found.</param>
+		/// <returns>True if leaf found, false if not.</returns>
+		internal bool Evaluate(out ILeaf leaf)
+        {
+			if (debugTree) { Debug.Log(gameObject.name + " evaluating tree..."); }
 
-			if (node != null) return node;
-			
-			Debug.LogWarning(gameObject.name + " has a non-Leaf node as the current origin.");
-			return null;
+			leaf = null;
+            var result = root.GetResult(); // Recursively travel the tree toward first running result.
+
+            if (result.Value == Result.Failure) 
+			{
+                if (debugTree) { Debug.Log(gameObject.name + " found only a Failure result."); }
+                return false;
+			}
+
+            if (debugTree) { DebugResult(result); }
+
+			leaf = result.Origin;
+			return true;
+        }
+
+		public bool TryAddContext(string key, ITreeContext context, bool overwrite)
+		{
+            if (!overwrite && this.context.ContainsKey(key)) { return false; }
+
+			this.context[key] = context;
+			return true;
+        }
+
+		public bool TryGetContext(string key, out ITreeContext context)
+		{
+			if (this.context.TryGetValue(key, out context)) { return true; }
+
+			return false;
 		}
 
-		/// <summary>
-		/// Called by the agent to match the current leaf result to the corresponding AgentAction result.
-		/// </summary>
-		/// <param name="r">The Result enum from AgentAction.Execute()</param>
-		internal void SetActionNodeResult(Result r)
+		public void RemoveContext(ITreeContext context)
 		{
-			if (currentResult.Origin is ActionNode n) { n.SetCurrentResult(r); }
+			List<string> keysToRemove = new List<string>();
+
+			foreach (var pair in this.context)
+			{
+				if (pair.Value == context)
+				{
+					keysToRemove.Add(pair.Key);
+				}
+			}
+
+			foreach (var key in keysToRemove)
+			{
+				this.context.Remove(key);
+			}
 		}
 	}
 }

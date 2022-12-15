@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using XNode;
 
 namespace BTree.Nodes
@@ -10,7 +9,7 @@ namespace BTree.Nodes
 		{
 			var result = GetResult();
 
-			if (result == null)
+			if (result == null && tree != null)
 			{
 				Debug.LogWarning("Inverter received a null value from child.");
 				return null;
@@ -25,9 +24,11 @@ namespace BTree.Nodes
 				result.Value = Result.Failure;
 			}
 
-			result.Path.Add(this);
-			graphResult = result.Value;
 			return result;
+		}
+
+		internal override void ResetNode()
+		{			
 		}
 	}
 }

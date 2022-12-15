@@ -19,9 +19,8 @@ namespace BTree.Nodes
 			}
 		}
 
-		public override void ResetNode()
+		internal override void ResetNode()
 		{
-			base.ResetNode();
 			_index = 0;
 		}
 
@@ -33,7 +32,6 @@ namespace BTree.Nodes
 
 				if (result.Value == Result.Running || result.Value == Result.Success)
 				{
-					result.Path.Add(this);
 					return result;
 				}
 

@@ -1,35 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 using XNode;
 
 namespace BTree
 {
-	[NodeWidth(300)]
+	[NodeWidth(275)]
 	public abstract class TreeNode : Node
 	{
-		[SerializeField, Tooltip("A visual representation of the value received from children")]
-		protected Result graphResult;
+        [SerializeField, Output(connectionType = ConnectionType.Override)]
+        protected TreeResult output;
 
-		[Output(connectionType = ConnectionType.Override)]
-		public TreeResult parentPort;
-		
-		protected Tree Tree;
+        protected Tree tree;		
+		protected TreeNode[] children;
 
-		[HideInInspector]
-		public TreeNode parent;
-		[HideInInspector]
-		public TreeNode[] children;
+        internal TreeNode parent;
 
-		/// <summary>
-		/// Use this instead of Node.Init() to reset all variables and get child node(s).
-		/// <param name="t">The tree that has this node in it.</param>
-		/// </summary>
-		public virtual void Setup(Tree t)
+        /// <summary>
+        /// Use this instead of Node.Init() to reset all variables and get child node(s).
+        /// <param name="t">The tree that has this node in it.</param>
+        /// </summary>
+        internal virtual void Setup(Tree t)
 		{
 			children = GetChildNodes();
 
-			if (Tree == null || Tree != t) { Tree = t; }
+			if (tree == null || tree != t) { tree = t; }
 		}
 
 		private TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.
@@ -59,6 +55,7 @@ namespace BTree
 		/// <returns></returns>
 		public TreeResult GetResult()
 		{
+			Assert.IsTrue(children?.Length <= 1, "Can't use GetResult on a node with more than 1 child!");
 			return GetChildResultAtIndex(0);
 		}
 
@@ -72,12 +69,12 @@ namespace BTree
 
 			// Fetch the port on the child that leads to this node and return the value it gets.
 			var child = children[i];
-			var childOutput = child.GetOutputPort(nameof(child.parentPort));
+			var childOutput = child.GetOutputPort(nameof(child.output));
 			var result = child.GetValue(childOutput) as TreeResult;
 			return result;
 		}
 
-		public void RecursiveResetChildren()
+		internal void RecursiveResetChildren()
 		{
 			if (children == null) { return; }
 
@@ -91,9 +88,6 @@ namespace BTree
 		/// <summary>
 		/// Use this to reset any member variables in inheriting classes.
 		/// </summary>
-		public virtual void ResetNode()
-		{
-			graphResult = Result.Running;
-		}
-	}
+		internal abstract void ResetNode();
+    }
 }

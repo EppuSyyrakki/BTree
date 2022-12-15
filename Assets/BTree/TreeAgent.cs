@@ -4,52 +4,57 @@ using UnityEngine;
 namespace BTree
 {
     [RequireComponent(typeof(Tree))]
-    public class TreeAgent : MonoBehaviour
+    public class TreeAgent : MonoBehaviour, ITreeContext
     {
-        [SerializeField] 
-        private bool debugMessages = false;
-        [SerializeField]
-        private Blackboard blackboard;
-
         private Tree tree;
-        private AgentAction current;
-  
+        private ILeaf current;
+
+        public ITreeContext Context => current?.Context;
+ 
         protected virtual void Awake()
         {
-            blackboard = new Blackboard();
             tree = GetComponent<Tree>();
-            tree.PathChanged += SetCurrent;
-            tree.Blackboard = blackboard;
         }
 
         protected virtual void Update()
         {
             if (current == null) 
             {
-                ActionNode node = tree.GetActionNode();
-                SetCurrent(node);
+                if (tree.Evaluate(out current))
+                {
+                    current.Enter(this);
+                }
+                else
+                {
+                    return;
+                }
             }
 
-            Result result = current.Execute();
-            tree.SetActionNodeResult(result);
-        }
+            current.Execute();
 
-        private void SetCurrent(ActionNode node)
-        {
-            if (current != null)
-            { 
-                current.OnExit();
+            if (current.Result == Result.Running) { return; }
+            
+            current.Exit();
+
+            if (tree.Evaluate(out ILeaf next))
+            {                   
+                next.Enter(this);
+                current = next;
             }
-
-            current = node.GetAction();
-            current.Initialize(this, node.MaxDuration);
-
-            if (debugMessages) { Debug.Log($"{name} TreeAgent switched to {current}"); }
+            else
+            {
+                tree.Restart();
+                current = null;
+            }            
         }
 
-        private void OnValidate()
+        /// <summary>
+        /// This can be used to force removal of a context from the Tree. Useful when a context object is destroyed 
+        /// for example. In this case it could be compared with the Context property to see 
+        /// </summary>
+        public void RemoveContext(ITreeContext remove)
         {
-            blackboard.OnAgentValidate();
-        }        
+            tree.RemoveContext(remove);
+        }
     }
 }

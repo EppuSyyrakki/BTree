@@ -1,4 +1,5 @@
-﻿using XNode;
+﻿using UnityEngine;
+using XNode;
 
 namespace BTree
 {
@@ -7,17 +8,20 @@ namespace BTree
 	/// </summary>
 	public class RootNode : TreeNode
 	{
-		[Input(connectionType = ConnectionType.Override)]
-		public TreeResult childPort;
+		[SerializeField, Input(connectionType = ConnectionType.Override)]
+		public TreeResult input;
 
 		public override object GetValue(NodePort port)
 		{
-			var result = GetResult();
+			TreeResult result = GetResult();
 
 			if (result == null) { return null; }
 
-			graphResult = result.Value;
 			return result;
+		}
+
+		internal override void ResetNode()
+		{
 		}
 	}
 }

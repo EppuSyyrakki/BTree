@@ -13,9 +13,8 @@ namespace BTree.Nodes
 
 		private int _counter;
 
-		public override void ResetNode()
+		internal override void ResetNode()
 		{
-			base.ResetNode();
 			_counter = 0;
 		}
 
@@ -35,13 +34,11 @@ namespace BTree.Nodes
 				{
 					_counter++;
 					result.Value = Result.Running;
-					result.Path.Add(this);
 					RecursiveResetChildren();
 					return result;
 				}
 			}
 
-			result.Path.Add(this);
 			return result;
 		}
 
