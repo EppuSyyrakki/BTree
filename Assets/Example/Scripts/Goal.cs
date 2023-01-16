@@ -46,6 +46,8 @@ public class Goal : MonoBehaviour, ITreeContext
 
     private IEnumerator FlashLight(Ball ball)
     {
+        var go = ball.gameObject;
+        Destroy(ball);
         spawner.RemoveBall(ball);
 
         for (int i = 0; i < 4; i++)
@@ -56,7 +58,7 @@ public class Goal : MonoBehaviour, ITreeContext
             yield return new WaitForSeconds(0.25f);
         }
 
-        Destroy(ball.gameObject);
+        Destroy(go);
     }
 
     private void AssignToPlayer(Player p)

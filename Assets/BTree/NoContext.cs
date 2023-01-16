@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace BTree
 {
@@ -11,5 +12,7 @@ namespace BTree
         public Transform transform => throw new System.NotImplementedException();
 
         public GameObject gameObject => throw new System.NotImplementedException();
+
+        public List<Tree> References => throw new System.NotImplementedException();
     }
 }

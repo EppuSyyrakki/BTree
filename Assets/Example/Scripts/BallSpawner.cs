@@ -9,7 +9,7 @@ public class BallSpawner : MonoBehaviour
     private Ball ballPrefab = null;
 
     private List<Player> players;
-    private event Action<Ball> OnRemoveBall;
+    private event Action OnRemoveBall;
     private event Action<Ball> OnSpawnBall;
 
     private void Awake()
@@ -18,11 +18,7 @@ public class BallSpawner : MonoBehaviour
 
         foreach (var player in players)
         {
-            OnRemoveBall += (ball) =>
-            {
-                player.Ball = null;
-                player.RemoveContext(ball);
-            };
+            OnRemoveBall += () => player.Ball = null;
             OnSpawnBall += (ball) => player.Ball = ball;
         }
 
@@ -32,7 +28,7 @@ public class BallSpawner : MonoBehaviour
     public void RemoveBall(Ball ball)
     {
         Invoke(nameof(SpawnBall), 0);
-        OnRemoveBall?.Invoke(ball);
+        OnRemoveBall?.Invoke();
     }
 
     private void SpawnBall()

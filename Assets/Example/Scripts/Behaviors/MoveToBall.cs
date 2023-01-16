@@ -42,6 +42,7 @@ public class MoveToBall : Leaf<NoContext>
     protected override void OnExit()
     {
         player.MovingToBall = false;
+        player.MoveTo(player.transform.position);
     }
 
     protected override void ResetLeaf()

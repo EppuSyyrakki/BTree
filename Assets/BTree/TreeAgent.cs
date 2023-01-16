@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BTree
@@ -8,7 +9,7 @@ namespace BTree
     {
         private Tree tree;
         private ILeaf current;
- 
+
         protected virtual void Awake()
         {
             tree = GetComponent<Tree>();
@@ -47,8 +48,7 @@ namespace BTree
         }
 
         /// <summary>
-        /// This can be used to force removal of a context from the Tree. Useful when a context object is destroyed 
-        /// for example. In this case it could be compared with the Context property to see 
+        /// This can be used to force removal of a context from the Tree. Useful when a context object is destroyed.
         /// </summary>
         public void RemoveContext(ITreeContext remove)
         {

@@ -23,7 +23,7 @@ public class ShootOrPass : Leaf<ITreeContext>
         bool isGoal = Context is Goal;        
         var rb = (Agent as Player).Ball.GetComponent<Rigidbody>();
 
-        if (rb.velocity.sqrMagnitude > 10f)
+        if (rb.velocity.sqrMagnitude > 10f || (rb.position - Agent.transform.position).sqrMagnitude > 2f)
         {
             Result = Result.Failure;
             return;
