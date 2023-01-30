@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 using XNode;
 
-namespace BTree.Nodes
+namespace BTree
 {
 	/// <summary>
 	/// Repeats a single child a given number of times. If the child returns failure at any point, returns failure.
 	/// </summary>
-	public class Repeater : Branch
+	public class Repeater : TreeNode
 	{
-		[SerializeField, Tooltip("0 <= repeats indefinitely")]
+        [SerializeField, Input(dynamicPortList: false, connectionType = ConnectionType.Override)]
+        protected TreeResult input;
+
+        [SerializeField, Tooltip("0 <= repeats indefinitely")]
 		private int repeat;
 
 		private int _counter;
@@ -30,8 +33,6 @@ namespace BTree.Nodes
 
 			if (result.Value != Result.Running)
 			{
-
-
 				if (repeat <= 0 || _counter < repeat)
 				{
 					_counter++;
@@ -43,6 +44,5 @@ namespace BTree.Nodes
 
 			return result;
 		}
-
 	}
 }

@@ -30,6 +30,7 @@ public class ShootOrPass : Leaf<ITreeContext>
         }
 
         float power = isGoal ? shotPower : passPower;
+        Debug.Log(Agent.name + (isGoal ? " shoots!" : " passes"));
         Vector3 force = (Context.transform.position - rb.position).normalized * power;
         Vector3 lead = isGoal ? Vector3.zero : Context.transform.forward;
         Debug.DrawLine(Agent.transform.position, Agent.transform.position + force, Color.blue, 2f);
@@ -38,10 +39,6 @@ public class ShootOrPass : Leaf<ITreeContext>
     }
 
     protected override void OnExit()
-    {
-    }
-
-    protected override void ResetLeaf()
     {
     }
 

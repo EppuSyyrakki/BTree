@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine.Assertions;
 
 namespace BTree
@@ -9,27 +10,51 @@ namespace BTree
 	[Serializable]
 	public class TreeResult : object
 	{
-		private TreeNode origin;
-
-		public ILeaf Origin
-		{
-			get
-			{
-				Assert.IsTrue(origin is ILeaf, $"{origin} is an end node but is not a ILeaf");
-				return origin as ILeaf;
-			}
-		}
-
+		public ILeaf Origin { get; private set; }
+		public List<Condition> Conditions { get; private set; }
 		public Result Value { get; set; }
 		
-		public TreeResult(TreeNode origin, Result result)
+		public TreeResult(ILeaf origin, Result result)
 		{
-			this.origin = origin;
+			Origin = origin;
 			Value = result;
+			Conditions = new List<Condition>();
+		}
+
+		public bool CheckConditions()
+		{
+			foreach (var cond in Conditions)
+			{
+				var port = cond.GetOutputPort(cond.OutputName);
+				var result = cond.GetValue(port) as ConditionResult;
+
+				if (result.Value == Result.Failure)
+				{
+					cond.Host.RecursiveFail();
+					return false;
+				}
+			}
+
+			return true;
 		}
 	}
 
-	public enum Result
+	/// <summary>
+	/// Wrapper for returning an object from a condition node.
+	/// </summary>
+    [Serializable]
+    public class ConditionResult : object
+    {
+        public Result Value { get; private set; }
+
+        public ConditionResult(Result result)
+        {
+            Assert.IsTrue(result != Result.Running, "Condition must never return Result.Running!");
+            Value = result;
+        }
+    }
+
+    public enum Result
 	{
 		Running,
 		Success,

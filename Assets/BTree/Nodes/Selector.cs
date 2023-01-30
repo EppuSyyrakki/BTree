@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 using XNode;
 
-namespace BTree.Nodes
+namespace BTree
 {
 	/// <summary>
 	/// Chooses a child that is able to run and returns its result. If all children fail, returns failure.
 	/// </summary>
-	public class Selector : Branch
+	public class Selector : TreeNode
 	{
-		private int index;
+        [SerializeField, Input(dynamicPortList: true, connectionType = ConnectionType.Override)]
+        protected TreeResult input;
+
+        private int index;
 
 		private bool HasNextChild => index + 1 < children.Length;
 
@@ -24,7 +27,7 @@ namespace BTree.Nodes
 
             if (result == null)
             {
-                Debug.LogWarning(GetType() + " received a null value");
+                // Debug.LogWarning(GetType() + " received a null value");
                 return null;
             }
 

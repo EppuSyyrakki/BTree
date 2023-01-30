@@ -9,11 +9,20 @@ public class Idle : Leaf<ITreeContext>
     {
     }
 
+    public override void Execute()
+    {
+        idleTime += Time.deltaTime;
+
+        if (idleTime > maxDuration) { Result = Result.Success; }        
+    }
+
     protected override void OnExit()
     {
     }
 
-    protected override void ResetLeaf()
-    {        
+    internal override void ResetNode()
+    {
+        base.ResetNode();
+        idleTime = 0;
     }
 }

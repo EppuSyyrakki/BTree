@@ -60,6 +60,10 @@ namespace BTree
                 {
                     root = rootNode;
                 }
+				else if (tn is Restart reset)
+				{
+
+				}
 
                 tn.Setup(this);
             }
@@ -86,17 +90,16 @@ namespace BTree
 		/// </summary>
 		/// <param name="leaf">The new leaf found from the tree. Null if nothing found.</param>
 		/// <returns>True if runnable leaf found, false if not.</returns>
-		internal bool Evaluate(out ILeaf leaf)
+		internal bool Evaluate(out TreeResult result)
         {
 			if (debugTree) { Debug.Log(gameObject.name + " evaluating tree..."); }
 		
             // Recursively travel the tree toward first running result.
-            var result = root.Result;
-            leaf = result?.Origin;
+            result = root.Result;
 
-            if (result.Value != Result.Running) 
+            if (result.Value != Result.Running || result.Origin == null) 
 			{
-                if (debugTree) { Debug.Log(gameObject.name + " received " + result.Value); }
+				if (debugTree) { Debug.Log($"{gameObject.name} received {result.Value} from {result.Origin}"); }
                 return false;
 			}
 

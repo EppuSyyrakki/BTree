@@ -39,14 +39,16 @@ public class MoveToBall : Leaf<NoContext>
 
         base.Execute();
     }
+
     protected override void OnExit()
     {
         player.MovingToBall = false;
-        player.MoveTo(player.transform.position);
+        //player.MoveTo(player.transform.position);
     }
 
-    protected override void ResetLeaf()
+    internal override void ResetNode()
     {
+        base.ResetNode();
         player = null;
         target = default;
     }

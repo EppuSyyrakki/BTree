@@ -20,20 +20,21 @@ public class MoveToSpace : Leaf<NoContext>
 
     public override void Execute()
     {
-        base.Execute();
-
         if ((Agent.transform.position - target).sqrMagnitude < 1f)
         {
             Result = Result.Success;
         }
+
+        //base.Execute();
     }
 
     protected override void OnExit()
     {
     }
 
-    protected override void ResetLeaf()
+    internal override void ResetNode()
     {
+        base.ResetNode();
         target = default;
     }
 

@@ -8,7 +8,9 @@ namespace BTree
     public class TreeAgent : MonoBehaviour, ITreeContext
     {
         private Tree tree;
-        private ILeaf current;
+        private TreeResult current;
+
+        public bool Reset { get; internal set; }
 
         protected virtual void Awake()
         {
@@ -17,27 +19,24 @@ namespace BTree
 
         protected virtual void Update()
         {
-            if (current == null) 
+            if (current == null || Reset)
             {
-                if (tree.Evaluate(out current))
-                {
-                    current.Enter(this);
-                }
-                else
-                {
-                    return;
-                }
+                tree.Evaluate(out current);
+                current.Origin.Enter(this);
             }
 
-            current.Execute();
+            if (current.CheckConditions())
+            {
+                current.Origin.Execute();
+            }           
 
-            if (current.Result == Result.Running) { return; }
+            if (current.Origin.Result == Result.Running) { return; }
             
-            current.Exit();
+            current.Origin.Exit();
 
-            if (tree.Evaluate(out ILeaf next))
+            if (tree.Evaluate(out TreeResult next))
             {                   
-                next.Enter(this);
+                next.Origin.Enter(this);
                 current = next;
             }
             else

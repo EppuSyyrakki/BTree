@@ -10,7 +10,7 @@ namespace BTree
 	/// </summary>
 	[NodeTint(0.15f, 0.175f, 0.15f)]
 	public abstract class Leaf<T> : TreeNode, ILeaf where T : class, ITreeContext
-	{
+    {
         [SerializeField, Tooltip("Negative value means indefinite.")]
         protected float maxDuration = -1f;
 
@@ -57,9 +57,11 @@ namespace BTree
         /// </summary>
         public virtual void Execute()
         {
+            if (maxDuration < 0) { return; }
+
             elapsed += Time.deltaTime;
 
-            if (maxDuration > 0 && elapsed > maxDuration)
+            if (elapsed > maxDuration)
             {
                 Result = Result.Failure;
             }
@@ -69,6 +71,7 @@ namespace BTree
 		{
             elapsed = 0;
             this.Agent = agent;
+            Debug.Log(agent + " is entering " + this);
 
             if (!String.IsNullOrEmpty(inContext))
             {
@@ -99,6 +102,7 @@ namespace BTree
 		public void Exit()
 		{
             OnExit();
+            Debug.Log(Agent + " is exiting " + this);
 
             if (!String.IsNullOrEmpty(outContext)) 
             {
@@ -106,7 +110,7 @@ namespace BTree
                 {
                     if (tree.debugTree)
                     {
-                        Debug.LogWarning($"{Agent.gameObject.name} TreeAgent: context {outContext} not set.");
+                        Debug.LogWarning($"{tree.agent.gameObject.name} TreeAgent: context {outContext} not set.");
                     }
                     
                     return;
@@ -116,10 +120,10 @@ namespace BTree
                 {
                     if (tree.debugTree)
                     {
-                        Debug.LogWarning($"{Agent.gameObject.name} TreeAgent: context {outContext} already exists.");
+                        Debug.LogWarning($"{tree.agent.gameObject.name} TreeAgent: context {outContext} already exists.");
                     }                   
                 }                
-            }   
+            }
         }
 
         /// <summary>
@@ -128,19 +132,12 @@ namespace BTree
         /// </summary>
         protected abstract void OnExit();
 
-        /// <summary>
-        /// Make sure to reset all members here. Reset is called when the whole tree fails and the evaluation starts
-        /// from a fresh state.
-        /// </summary>
-        protected abstract void ResetLeaf();
-
         internal override void ResetNode()
 		{
             currentResult = new TreeResult(this, Result.Running);
             context = null;
             Agent = null;
             elapsed = 0;
-            ResetLeaf();
 		}
 
 		internal override void Setup(Tree t)

@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using XNode;
 
-namespace BTree.Nodes
+namespace BTree
 {
-	public class Inverter : Branch
+	public class Inverter : TreeNode
 	{
-		public override object GetValue(NodePort port)
+        [SerializeField, Input(dynamicPortList: false, connectionType = ConnectionType.Override)]
+        protected TreeResult input;
+
+        public override object GetValue(NodePort port)
 		{
 			var result = GetResult();
 

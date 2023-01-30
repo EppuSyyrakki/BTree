@@ -14,7 +14,7 @@ public class MoveToDefend : Leaf<NoContext>
         player = Agent as Player;
         var pos = GetLocation();
         target = player.MoveTo(pos);
-        player.MovingToBall = true;
+        //player.MovingToBall = true;
     }
 
     public override void Execute()
@@ -41,11 +41,12 @@ public class MoveToDefend : Leaf<NoContext>
     }
     protected override void OnExit()
     {
-        player.MovingToBall = false;
+        //player.MovingToBall = false;
     }
 
-    protected override void ResetLeaf()
+    internal override void ResetNode()
     {
+        base.ResetNode();
         player = null;
         target = default;
     }

@@ -1,4 +1,4 @@
-﻿namespace BTree
+namespace BTree
 {
     /// <summary>
     /// A wrapper interface to allow AgentTree to access Leaf inheritor without specifying its T.

@@ -24,8 +24,7 @@ namespace BTree
         internal virtual void Setup(Tree t)
 		{
 			children = GetChildNodes();
-
-			if (tree == null || tree != t) { tree = t; }
+			tree = t; 
 		}
 
 		private TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.
@@ -55,14 +54,14 @@ namespace BTree
 		/// <returns></returns>
 		protected TreeResult GetResult()
 		{
-			Assert.IsTrue(children?.Length <= 1, "Can't use GetResult on a node with more than 1 child!");
+			//Assert.IsTrue(Inputs.Count() <= 1, "Can't use GetResult on a node with more than 1 child!");
 			return GetChildResultAtIndex(0);
 		}
 
 		/// <summary>
-		/// Get value (result) from first connected child.
+		/// Get value (result) from connected child at index i.
 		/// </summary>
-		/// <returns>The result of the first child node. Null if no children found.</returns>
+		/// <returns>The result of the child node at index i. Null if no children found.</returns>
 		protected TreeResult GetChildResultAtIndex(int i)
 		{
 			if (children == null || children.Length == 0) { return null; }  // Check to prevent editor errors
@@ -85,9 +84,24 @@ namespace BTree
 			}
 		}
 
+		internal void RecursiveFail()
+		{
+			if (this is ILeaf leaf)
+			{
+				leaf.Fail();
+			}
+			else
+			{
+				foreach(var child in children)
+				{
+					child.RecursiveFail();
+				}
+			}
+		}
+
 		/// <summary>
 		/// Use this to reset any member variables in inheriting classes.
 		/// </summary>
-		internal abstract void ResetNode();
+		internal virtual void ResetNode() { }
     }
 }

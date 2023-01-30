@@ -2,15 +2,18 @@
 using UnityEngine;
 using XNode;
 
-namespace BTree.Nodes
+namespace BTree
 {
 	/// <summary>
 	/// Loops through child nodes. If any child fails, returns failure. Returns success after all nodes
 	/// succeeded and has repeated given times.
 	/// </summary>
-	public class Sequence : Branch
+	public class Sequence : TreeNode
 	{
-		private int index;
+        [SerializeField, Input(dynamicPortList: true, connectionType = ConnectionType.Override)]
+        protected TreeResult input;
+
+        private int index;
 		private bool HasNextChild => index + 1 < children.Length;
 
 		internal override void ResetNode()
@@ -25,7 +28,7 @@ namespace BTree.Nodes
 
 			if (result == null)
 			{
-				Debug.LogWarning(GetType() + " received a null value");
+				//Debug.LogWarning(GetType() + " received a null value");
 				return null;
 			}
 
