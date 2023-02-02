@@ -8,7 +8,7 @@ namespace BTree
     public class TreeAgent : MonoBehaviour, ITreeContext
     {
         private Tree tree;
-        private TreeResult current;
+        private TreeResponse current;
 
         public bool Reset { get; internal set; }
 
@@ -34,7 +34,7 @@ namespace BTree
             
             current.Origin.Exit();
 
-            if (tree.Evaluate(out TreeResult next))
+            if (tree.Evaluate(out TreeResponse next))
             {                   
                 next.Origin.Enter(this);
                 current = next;

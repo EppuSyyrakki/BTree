@@ -24,18 +24,17 @@ namespace BTree
 		private bool overwriteOut = true;
 
         private float elapsed = 0;		
-        private TreeResult currentResult;
 		private T context;
 
 		protected TreeAgent Agent { get; private set; }
-
+        public Result Result { get; set; }
         protected T Context
         {
             get
             {
                 if (context is NoContext)
                 {
-                    Debug.LogError($"{this} trying to use context while having NoContext type");
+                    Debug.LogError($"{tree.agent.gameObject}.{this} trying to use context while having NoContext type");
                     return null;
                 }
 
@@ -44,16 +43,9 @@ namespace BTree
             set => context = value;
         }
 
-		public Result Result
-		{
-			get => currentResult.Value;
-			set => currentResult.Value = value;
-		}
-
         /// <summary>
         /// Override this to create actionable nodes that get sent to the agent after the tree is evaluated. 
-        /// The base implementation only advances the timer. To create a simple check node without exection
-        /// this needs an empty override.
+        /// The base implementation only advances the timer.
         /// </summary>
         public virtual void Execute()
         {
@@ -70,10 +62,10 @@ namespace BTree
 		public void Enter(TreeAgent agent)
 		{
             elapsed = 0;
-            this.Agent = agent;
-            Debug.Log(agent + " is entering " + this);
+            Agent = agent;
+            Result = Result.Running;
 
-            if (!String.IsNullOrEmpty(inContext))
+            if (!string.IsNullOrEmpty(inContext))
             {
                 if (tree.TryGetContext(inContext, out ITreeContext context))
                 {
@@ -83,7 +75,7 @@ namespace BTree
                 {
                     if (tree.debugTree)
                     {
-                        Debug.LogWarning($"{agent.gameObject} TreeAgent: Could not find {this} InputVariable {inContext}.");
+                        Debug.LogWarning($"{agent.gameObject}.{this} could not find InputVariable {inContext}.");
                     }
                     
                     Result = Result.Failure;
@@ -102,7 +94,6 @@ namespace BTree
 		public void Exit()
 		{
             OnExit();
-            Debug.Log(Agent + " is exiting " + this);
 
             if (!String.IsNullOrEmpty(outContext)) 
             {
@@ -134,7 +125,7 @@ namespace BTree
 
         internal override void ResetNode()
 		{
-            currentResult = new TreeResult(this, Result.Running);
+            Result = Result.Waiting;
             context = null;
             Agent = null;
             elapsed = 0;
@@ -159,7 +150,7 @@ namespace BTree
 		/// </summary>
 		public override object GetValue(NodePort port)
 		{	
-			return currentResult;
+			return new TreeResponse(this, Result);
 		}
 	}
 }

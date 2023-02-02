@@ -1,4 +1,5 @@
-﻿using XNode;
+﻿using UnityEngine;
+using XNode;
 
 namespace BTree
 {
@@ -10,13 +11,22 @@ namespace BTree
     [NodeTint(0.15f, 0.25f, 0.25f)]
     public abstract class Condition : TreeNode
     {
+        [SerializeField]
+        protected bool invert;
+
         internal Parallel Host { get; set; }
-        internal string OutputName => nameof(output);
-        internal bool DebugTree => tree.debugTree;
+        
+        internal bool Check()
+        {
+            bool result = OnCheck();
+            return invert ? !result : result;
+        }
+
+        protected abstract bool OnCheck();
 
         public override object GetValue(NodePort port)
         {
-            return new ConditionResult(Result.Success);
-        }
+            return new TreeResponse(null, Check() ? Result.Success : Result.Failure); 
+        }  
     }
 }

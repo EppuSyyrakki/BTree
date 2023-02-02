@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Assertions;
 using XNode;
 
 namespace BTree
@@ -10,7 +9,7 @@ namespace BTree
 	public abstract class TreeNode : Node
 	{
         [SerializeField, Output(connectionType = ConnectionType.Override)]
-        protected TreeResult output;
+        protected TreeResponse output;
 
         protected Tree tree;		
 		protected TreeNode[] children;
@@ -23,20 +22,20 @@ namespace BTree
         /// </summary>
         internal virtual void Setup(Tree t)
 		{
-			children = GetChildNodes();
-			tree = t; 
+            tree = t;
+            children = GetChildNodes();			
 		}
 
 		private TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.
 		{
-			var ports = Inputs.ToArray();
-			List<TreeNode> connectedChildren = new List<TreeNode>();
+            List<TreeNode> connectedChildren = new List<TreeNode>();           
+			var inputs = Inputs.ToArray();
 
-			foreach (var port in ports)
+			foreach (var input in inputs)
 			{
-				if (port.Connection == null) { continue; }
+				if (input.Connection == null) { continue; }
 
-				var node = port.Connection.node as TreeNode;
+				var node = input.Connection.node as TreeNode;
 
 				if (node != null)
 				{
@@ -52,24 +51,23 @@ namespace BTree
 		/// Convenience method to get index 0 child.
 		/// </summary>
 		/// <returns></returns>
-		protected TreeResult GetResult()
+		protected TreeResponse GetChildResponse()
 		{
-			//Assert.IsTrue(Inputs.Count() <= 1, "Can't use GetResult on a node with more than 1 child!");
-			return GetChildResultAtIndex(0);
+			return GetChildResponseAtIndex(0);
 		}
 
 		/// <summary>
 		/// Get value (result) from connected child at index i.
 		/// </summary>
 		/// <returns>The result of the child node at index i. Null if no children found.</returns>
-		protected TreeResult GetChildResultAtIndex(int i)
+		protected TreeResponse GetChildResponseAtIndex(int i)
 		{
 			if (children == null || children.Length == 0) { return null; }  // Check to prevent editor errors
 
 			// Fetch the port on the child that leads to this node and return the value it gets.
 			var child = children[i];
 			var childOutput = child.GetOutputPort(nameof(child.output));
-			var result = child.GetValue(childOutput) as TreeResult;
+			var result = child.GetValue(childOutput) as TreeResponse;
 			return result;
 		}
 

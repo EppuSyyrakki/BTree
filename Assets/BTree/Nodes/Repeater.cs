@@ -9,7 +9,7 @@ namespace BTree
 	public class Repeater : TreeNode
 	{
         [SerializeField, Input(dynamicPortList: false, connectionType = ConnectionType.Override)]
-        protected TreeResult input;
+        protected TreeResponse input;
 
         [SerializeField, Tooltip("0 <= repeats indefinitely")]
 		private int repeat;
@@ -23,26 +23,26 @@ namespace BTree
 
 		public override object GetValue(NodePort port)
 		{
-			var result = GetResult();
+			var response = GetChildResponse();
 
-			if (result == null)
+			if (response == null)
 			{
 				Debug.LogWarning(GetType() + " received a null value");
 				return null;
 			}
 
-			if (result.Value != Result.Running)
+			if (response.Result != Result.Running)
 			{
 				if (repeat <= 0 || _counter < repeat)
 				{
 					_counter++;
-					result.Value = Result.Running;
+					response.Result = Result.Running;
 					RecursiveResetChildren();
-					return result;
+					return response;
 				}
 			}
 
-			return result;
+			return response;
 		}
 	}
 }

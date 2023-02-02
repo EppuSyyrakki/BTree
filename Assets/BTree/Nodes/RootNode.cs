@@ -9,9 +9,9 @@ namespace BTree
 	public class RootNode : TreeNode
 	{
 		[SerializeField, Input(connectionType = ConnectionType.Override)]
-		public TreeResult input;
+		public TreeResponse input;
 
-		public TreeResult Result => GetResult();
+		public TreeResponse Response => GetChildResponse();
 
 		internal override void ResetNode()
 		{

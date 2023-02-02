@@ -1,5 +1,4 @@
 ﻿using BTree;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,17 +13,19 @@ public class Player : TreeAgent
 
     private NavMeshAgent navMeshAgent;
 
+    public bool IsDefending { get; set; }
     public bool MovingToBall { get; set; }
     public Ball Ball { get; set; }
     public Goal OwnGoal { get; set; }
     public Goal OpponentGoal { get; set; }
     public List<Player> TeamMates { get; private set; }
-
+    public Vector3 Start { get; private set; }
     public Team Side => team;
 
     protected override void Awake()
     {
-        base.Awake();      
+        base.Awake();
+        Start = transform.position;
         navMeshAgent = GetComponent<NavMeshAgent>();
         var players = FindObjectsOfType<Player>().ToList();
         players.Remove(this);

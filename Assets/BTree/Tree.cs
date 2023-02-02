@@ -21,7 +21,9 @@ namespace BTree
 
 		private void Awake()
 		{
-			if (treeAsset == null)
+            agent = GetComponent<TreeAgent>();
+
+            if (treeAsset == null)
 			{
 				Debug.LogError($"SceneTree on GameObject {name} has no TreeAsset assigned!");
 				return;
@@ -29,18 +31,20 @@ namespace BTree
 			else
 			{
                 graph = treeAsset.Copy();
-				context = new Dictionary<string, ITreeContext>();
-				InitGraph();
+				context = new Dictionary<string, ITreeContext>();				
             }
-
-			agent = GetComponent<TreeAgent>();
 		}
 
-		private void DebugResult(TreeResult result)
+		private void Start()
+		{
+            InitGraph();
+        }
+
+		private void DebugResult(TreeResponse result)
 		{
 			if (result?.Origin != null)
 			{			
-				Debug.Log($"{gameObject.name} SceneTree result: {result.Value} from {result.Origin}");
+				Debug.Log($"{gameObject.name} SceneTree result: {result.Result} from {result.Origin}");
 			}
 		}
 
@@ -90,16 +94,16 @@ namespace BTree
 		/// </summary>
 		/// <param name="leaf">The new leaf found from the tree. Null if nothing found.</param>
 		/// <returns>True if runnable leaf found, false if not.</returns>
-		internal bool Evaluate(out TreeResult result)
+		internal bool Evaluate(out TreeResponse result)
         {
 			if (debugTree) { Debug.Log(gameObject.name + " evaluating tree..."); }
 		
-            // Recursively travel the tree toward first running result.
-            result = root.Result;
+            // Recursively travel the tree toward first waiting result.
+            result = root.Response;
 
-            if (result.Value != Result.Running || result.Origin == null) 
+            if (result.Result != Result.Waiting || result.Origin == null) 
 			{
-				if (debugTree) { Debug.Log($"{gameObject.name} received {result.Value} from {result.Origin}"); }
+				if (debugTree) { Debug.Log($"{gameObject.name} received {result.Result} from {result.Origin}"); }
                 return false;
 			}
 

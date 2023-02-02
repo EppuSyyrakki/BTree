@@ -15,17 +15,19 @@ public class MoveToSpace : Leaf<NoContext>
         Transform goal = GetGoalTransform(player);
         Vector3 towards = (goal.position - player.transform.position).normalized * multiplier * 0.5f;
         random.y = 0;
-        target = player.MoveTo(player.transform.position + random + towards);
+        target = player.MoveTo(player.Start + random + towards);
     }
 
     public override void Execute()
     {
-        if ((Agent.transform.position - target).sqrMagnitude < 1f)
+        if ((Agent.transform.position - target).sqrMagnitude < 1.5f)
         {
             Result = Result.Success;
         }
-
-        //base.Execute();
+        else
+        {
+            base.Execute();
+        }   
     }
 
     protected override void OnExit()

@@ -1,6 +1,5 @@
 ﻿using BTree;
 using UnityEngine;
-using XNode;
 
 namespace Conditions
 {
@@ -9,20 +8,20 @@ namespace Conditions
     /// </summary>
     public class IsClosestToBall : Condition
     {
-        public override object GetValue(NodePort port)
+        protected override bool OnCheck()
         {
-            if (tree == null) { return null; }
+            if (tree == null) { return false; }
 
             var player = tree.agent as Player;
 
             if (IsClosest(player))
             {
-                return new ConditionResult(Result.Success);
+                return true;
             }
 
             if (tree.debugTree) { Debug.Log($"{tree.agent} condition {this} failed!"); }
 
-            return new ConditionResult(Result.Failure);
+            return false;
         }
 
         private static bool IsClosest(Player player)

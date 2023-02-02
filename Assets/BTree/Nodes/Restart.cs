@@ -2,7 +2,7 @@
 {
     public class Restart : TreeNode, ILeaf
     {
-        public Result Result => Result.Success;
+        public Result Result => Result.Waiting;
         public bool IsInitialized => true;
 
         public void Enter(TreeAgent agent) { }

@@ -50,7 +50,7 @@ public class FindTarget : Leaf<ITreeContext>
 
         foreach (var hit in hits)
         {
-            if (hit.transform.TryGetComponent<Player>(out _))// && found.Side != player.Side)
+            if (hit.transform.TryGetComponent<Player>(out var found) && found.Side != player.Side)
             {
                 Debug.DrawLine(player.transform.position, target, Color.black, 2f);
                 return true;

@@ -11,10 +11,10 @@ namespace BTree
 	public class Parallel : TreeNode
 	{
         [SerializeField, Input(dynamicPortList: true, connectionType: ConnectionType.Override)]
-        private Result conditions;
+        private TreeResponse conditions;
 
         [SerializeField, Input(dynamicPortList: false, connectionType: ConnectionType.Override)]
-        private TreeResult input;
+        private TreeResponse input;
 
         private List<Condition> conditionNodes;
 
@@ -26,15 +26,17 @@ namespace BTree
 
         public override object GetValue(NodePort port)
 		{
-            var result = GetResult();
-            result.Conditions.AddRange(conditionNodes);
+            if (tree == null) { return null; }
 
-            if (!result.CheckConditions())
+            var response = GetChildResponse();
+            response.Conditions.AddRange(conditionNodes);
+
+            if (!response.CheckConditions())
             {
-                result.Value = Result.Failure;
+                response.Result = Result.Failure;
             }
 
-            return result;
+            return response;
 		}
 
         private TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.

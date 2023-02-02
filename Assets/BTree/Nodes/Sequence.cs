@@ -10,54 +10,56 @@ namespace BTree
 	/// </summary>
 	public class Sequence : TreeNode
 	{
-        [SerializeField, Input(dynamicPortList: true, connectionType = ConnectionType.Override)]
-        protected TreeResult input;
+		[SerializeField, Input(dynamicPortList: true, connectionType: ConnectionType.Override)]
+		protected TreeResponse input;
 
-        private int index;
+		private int index;
 		private bool HasNextChild => index + 1 < children.Length;
+		private TreeResponse storedResponse = null;
 
 		internal override void ResetNode()
 		{
 			index = 0;
+			storedResponse = null;
 		}
 
 		public override object GetValue(NodePort port)
 		{
+			if (storedResponse != null) { return storedResponse; }
+
 			index = 0;
- 			var result = GetChildResultAtIndex(index);
+ 			var response = GetChildResponseAtIndex(index);
 
-			if (result == null)
-			{
-				//Debug.LogWarning(GetType() + " received a null value");
-				return null;
-			}
+			if (response == null) { return null; }
 
-			return Resolve(result);
+			return Resolve(response);
 		}
 
-		private TreeResult Resolve(TreeResult result)
+		private TreeResponse Resolve(TreeResponse response)
 		{
-			if (result.Value == Result.Running)
+			if (response.Result == Result.Running || response.Result == Result.Waiting)
 			{
 				// If child is running, send it on as is.
-				return result;
+				return response;
 			}
 
-			if (result.Value == Result.Success)
+			if (response.Result == Result.Success)
 			{
 				if (HasNextChild)
 				{
 					// Child succeeded but there is more children to go through so check them.
 					index++;
-					result = GetChildResultAtIndex(index);
-					return Resolve(result);
+					response = GetChildResponseAtIndex(index);
+					return Resolve(response);
 				}
 
 				// This is the last child, set success.
-				result.Value = Result.Success;
+				response.Result = Result.Success;
 			}
 
-			return result;
+			// Store the response and send it.
+			storedResponse = response;
+			return storedResponse;
 		}
 	}
 }

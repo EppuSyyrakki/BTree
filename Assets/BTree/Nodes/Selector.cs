@@ -9,54 +9,58 @@ namespace BTree
 	public class Selector : TreeNode
 	{
         [SerializeField, Input(dynamicPortList: true, connectionType = ConnectionType.Override)]
-        protected TreeResult input;
+        protected TreeResponse input;
 
         private int index;
+        private TreeResponse storedResponse = null;
 
-		private bool HasNextChild => index + 1 < children.Length;
+        private bool HasNextChild => index + 1 < children.Length;
 
         internal override void ResetNode()
 		{
 			index = 0;
-		}
+            storedResponse = null;
+        }
 
 		public override object GetValue(NodePort port)
 		{
+            if (storedResponse != null) { return storedResponse; }
+
             index = 0;
-            var result = GetChildResultAtIndex(index);
+            var response = GetChildResponseAtIndex(index);
 
-            if (result == null)
-            {
-                // Debug.LogWarning(GetType() + " received a null value");
-                return null;
-            }
+            if (response == null) { return null; }
 
-            return Resolve(result);
+            return Resolve(response);
         }
 
-		private TreeResult Resolve(TreeResult result)
+		private TreeResponse Resolve(TreeResponse response)
 		{
-            if (result.Value == Result.Running)
+            if (response.Result == Result.Running || response.Result == Result.Waiting)
             {
-                // If child is running, send it on as is.
-                return result;
+                // If child is running or waiting, send it on as is.
+                return response;
             }
 
-            if (result.Value == Result.Failure)
+            if (response.Result == Result.Success)
+            {
+                // Only allow a single success to return.
+                storedResponse = response;
+                return storedResponse;
+            }
+
+            if (response.Result == Result.Failure)
             {
                 if (HasNextChild)
                 {
                     // Child failed but there is more children to go through so check them.
                     index++;
-                    result = GetChildResultAtIndex(index);
-                    return Resolve(result);
+                    response = GetChildResponseAtIndex(index);
+                    return Resolve(response);
                 }
-
-                // This is the last child, set success.
-                result.Value = Result.Failure;
             }
 
-            return result;
+            return response;
         }
 	}
 }

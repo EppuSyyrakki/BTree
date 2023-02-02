@@ -25,16 +25,17 @@ public class MoveToBall : Leaf<NoContext>
             return;
         }
 
-        if ((target - player.Ball.transform.position).sqrMagnitude > 2.5f)
+        if ((target - player.Ball.transform.position).sqrMagnitude > 2f)
         {
             var pos = GetLocation();
             target = player.MoveTo(pos);
             return;
         }
 
-        if ((player.transform.position - target).sqrMagnitude < 1.5f)
+        if ((player.transform.position - player.Ball.transform.position).sqrMagnitude < 2f)
         {           
             Result = Result.Success;
+            return;
         }
 
         base.Execute();

@@ -8,26 +8,26 @@ public class MoveToDefend : Leaf<NoContext>
 {
     private Player player;
     private Vector3 target;
+    private float timer;
 
     protected override void OnEnter()
     {
         player = Agent as Player;
+        player.IsDefending = true;
         var pos = GetLocation();
         target = player.MoveTo(pos);
-        //player.MovingToBall = true;
+        timer = 0;
     }
 
     public override void Execute()
-    {
-        base.Execute();
-
+    {     
         if (player.Ball == null)
         {
             Result = Result.Failure;
             return;
         }
 
-        if ((target - player.Ball.transform.position).sqrMagnitude > 2.5f)
+        if ((target - player.Ball.transform.position).sqrMagnitude > 3f)
         {
             var pos = GetLocation();
             target = player.MoveTo(pos);
@@ -35,14 +35,22 @@ public class MoveToDefend : Leaf<NoContext>
         }
 
         if ((player.transform.position - target).sqrMagnitude < 1.5f)
-        {           
-            Result = Result.Success;
+        {
+            player.IsDefending = true;
+            timer += Time.deltaTime;
+
+            if (timer > maxDuration)
+            {
+                Result = Result.Success;
+                player.IsDefending = false;
+            }
+        }
+        else
+        {
+            player.IsDefending = false;
         }
     }
-    protected override void OnExit()
-    {
-        //player.MovingToBall = false;
-    }
+    protected override void OnExit() { }
 
     internal override void ResetNode()
     {

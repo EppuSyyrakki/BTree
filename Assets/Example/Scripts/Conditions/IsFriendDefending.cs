@@ -1,31 +1,30 @@
 ﻿using BTree;
 using UnityEngine;
-using XNode;
 
 namespace Conditions
 {
     /// <summary>
     /// Example of using a Condition in a tree.
     /// </summary>
-    public class IsFriendMovingToBall : Condition
+    public class IsFriendDefending : Condition
     {
-        public override object GetValue(NodePort port)
+        protected override bool OnCheck()
         {
-            if (tree == null) { return null; }
+            if (tree == null) { return false; }
 
             var player = tree.agent as Player;
 
             foreach (var friend in player.TeamMates)
             {
-                if (friend.MovingToBall)
+                if (friend.IsDefending)
                 {
-                    return new ConditionResult(Result.Success);
+                    return true;
                 }
             }
 
             if (tree.debugTree) { Debug.Log($"{tree.agent} condition {this} failed!"); }
 
-            return new ConditionResult(Result.Failure);
+            return false;
         }
     }
 }
