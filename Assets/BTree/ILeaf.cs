@@ -5,10 +5,10 @@ namespace BTree
     /// </summary>
     public interface ILeaf
     {
-        void Enter(TreeAgent agent);
+        void Enter();
         void Execute();
         void Exit();
-        Result Result { get; }
+        TreeResponse Response { get; }
         void Fail();
     }
 }

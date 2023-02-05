@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using XNode;
 
 namespace BTree
 {
@@ -12,9 +11,5 @@ namespace BTree
 		public TreeResponse input;
 
 		public TreeResponse Response => GetChildResponse();
-
-		internal override void ResetNode()
-		{
-		}
 	}
 }

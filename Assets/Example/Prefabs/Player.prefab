@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3905578239845869197}
   - component: {fileID: 3350945799436325928}
-  - component: {fileID: 5571393896695726556}
   - component: {fileID: 773902043707935425}
   - component: {fileID: 6558028778726567886}
   - component: {fileID: 5119216028744314616}
@@ -50,23 +49,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ae9c84707045c14a90ad03964537149, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 0
-  shotPower: 1200
---- !u!114 &5571393896695726556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6545860917470056520}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 767c3fc675b83c242af5f0d5edd4c684, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graph: {fileID: 0}
-  treeAsset: {fileID: 11400000, guid: 94271c92935a7174f885d9eefbf25683, type: 2}
+  treeAsset: {fileID: 0}
   debugTree: 0
+  team: 0
 --- !u!33 &773902043707935425
 MeshFilter:
   m_ObjectHideFlags: 0

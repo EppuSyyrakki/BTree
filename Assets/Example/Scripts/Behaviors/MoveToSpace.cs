@@ -22,7 +22,7 @@ public class MoveToSpace : Leaf<NoContext>
     {
         if ((Agent.transform.position - target).sqrMagnitude < 1.5f)
         {
-            Result = Result.Success;
+            Response.Result = Result.Success;
         }
         else
         {

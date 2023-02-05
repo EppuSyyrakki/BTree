@@ -26,7 +26,7 @@ namespace BTree
 
         public override object GetValue(NodePort port)
         {
-            return new TreeResponse(null, Check() ? Result.Success : Result.Failure); 
+            return new TreeResponse(Check() ? Result.Success : Result.Failure); 
         }  
     }
 }

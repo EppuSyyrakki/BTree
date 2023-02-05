@@ -25,7 +25,7 @@ public class ShootOrPass : Leaf<ITreeContext>
 
         if (rb.velocity.sqrMagnitude > 10f || (rb.position - Agent.transform.position).sqrMagnitude > 2.5f)
         {
-            Result = Result.Failure;
+            Response.Result = Result.Failure;
             return;
         }
 
@@ -35,7 +35,7 @@ public class ShootOrPass : Leaf<ITreeContext>
         Vector3 lead = isGoal ? Vector3.zero : Context.transform.forward;
         Debug.DrawLine(Agent.transform.position, Agent.transform.position + force, Color.blue, 2f);
         rb.AddForce(force + Vector3.up + lead, ForceMode.Impulse);
-        Result = Result.Success;
+        Response.Result = Result.Success;
     }
 
     protected override void OnExit()
@@ -50,6 +50,6 @@ public class ShootOrPass : Leaf<ITreeContext>
         var rb = player.Ball.GetComponent<Rigidbody>();
         Vector3 force = (away + toGoal) * passPower * 0.5f + Vector3.up * 2f;
         rb.AddForce(force, ForceMode.Impulse);
-        Result = Result.Success;
+        Response.Result = Result.Success;
     }
 }

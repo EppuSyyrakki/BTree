@@ -13,6 +13,6 @@ namespace BTree
 
         public GameObject gameObject => throw new System.NotImplementedException();
 
-        public List<Tree> References => throw new System.NotImplementedException();
+        public List<TreeAgent> References => throw new System.NotImplementedException();
     }
 }

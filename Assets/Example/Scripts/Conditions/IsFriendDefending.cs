@@ -10,9 +10,9 @@ namespace Conditions
     {
         protected override bool OnCheck()
         {
-            if (tree == null) { return false; }
+            if (!initialized) { return false; }
 
-            var player = tree.agent as Player;
+            var player = Agent as Player;
 
             foreach (var friend in player.TeamMates)
             {
@@ -22,7 +22,7 @@ namespace Conditions
                 }
             }
 
-            if (tree.debugTree) { Debug.Log($"{tree.agent} condition {this} failed!"); }
+            if (Agent.debugTree) { Debug.Log($"{Agent} condition {this} failed!"); }
 
             return false;
         }

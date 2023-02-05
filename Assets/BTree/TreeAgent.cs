@@ -1,57 +1,171 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace BTree
 {
-    [RequireComponent(typeof(Tree))]
-    public class TreeAgent : MonoBehaviour, ITreeContext
-    {
-        private Tree tree;
-        private TreeResponse current;
+	/// <summary>
+	/// An instantiated version of the TreeAsset graph that can be used and referenced in scenes at runtime.
+	/// </summary>
+	public class TreeAgent : MonoBehaviour, ITreeContext
+	{
+        [SerializeField, Tooltip("Reference to a TreeAsset ScriptableObject")]
+        private TreeAsset treeAsset;
 
-        public bool Reset { get; internal set; }
+		protected Dictionary<string, ITreeContext> context;
+        protected TreeResponse current;
+		
+		public TreeAsset Tree { get; protected set; }
+        public bool debugTree = false;
 
-        protected virtual void Awake()
-        {
-            tree = GetComponent<Tree>();
-        }
+		protected virtual void Awake()
+		{
+            if (treeAsset == null)
+			{
+				Debug.LogError($"TreeAgent on GameObject {name} has no TreeAsset assigned!");
+				return;
+			}
+			else
+			{
+				context = new Dictionary<string, ITreeContext>();
+				Tree = (TreeAsset)treeAsset.Copy();
+				Tree.Initialize(this);
+            }
+		}
 
         protected virtual void Update()
         {
-            if (current == null || Reset)
+			if (current == null)
             {
-                tree.Evaluate(out current);
-                current.Origin.Enter(this);
+                Evaluate(out current);
+                current.Origin.Enter();
             }
 
             if (current.CheckConditions())
             {
                 current.Origin.Execute();
-            }           
+            }
 
-            if (current.Origin.Result == Result.Running) { return; }
-            
-            current.Origin.Exit();
+            if (current.Origin.Response.Result == Result.Running) { return; }
 
-            if (tree.Evaluate(out TreeResponse next))
-            {                   
-                next.Origin.Enter(this);
+			current.Origin.Exit();
+
+            if (Evaluate(out TreeResponse next))
+            {
+                next.Origin.Enter();
                 current = next;
             }
-            else
-            {
-                tree.Restart();
+			else
+			{
+                Restart();
                 current = null;
-            }            
+            }
         }
 
-        /// <summary>
-        /// This can be used to force removal of a context from the Tree. Useful when a context object is destroyed.
-        /// </summary>
-        public void RemoveContext(ITreeContext remove)
+		/// <summary>
+		/// Resets all nodes and clears the context dictionary. Used when the agent can't find any Running results.
+		/// </summary>
+        protected void Restart()
         {
-            tree.RemoveContext(remove);
+			if (debugTree) { Debug.Log(gameObject.name + " is resetting its behavior tree."); }
+
+			context.Clear();
+			Tree.ResetNodes();
+        }        
+
+		/// <summary>
+		/// Recursively travel the tree to find Result.Running.
+		/// </summary>
+		/// <param name="leaf">The new leaf found from the tree. Null if nothing found.</param>
+		/// <returns>True if runnable leaf found, false if not.</returns>
+		internal bool Evaluate(out TreeResponse result)
+        {
+			if (debugTree) { Debug.Log(gameObject.name + " evaluating tree..."); }
+		
+            // Recursively travel the tree toward first waiting result.
+            result = Tree.Root.Response;
+
+            if (result.Result != Result.Running || result.Origin == null) 
+			{
+				if (debugTree) { Debug.Log($"{gameObject.name} received {result.Result} from {result.Origin}"); }
+                return false;
+			}
+
+            if (debugTree) { DebugResult(result); }
+
+			return true;
+        }
+		
+		/// <summary>
+		/// Tries to add a new context key/value pair.
+		/// </summary>
+		/// <param name="key">The dictionary key to add.</param>
+		/// <param name="context">The context to add under the key.</param>
+		/// <param name="overwrite">If true and key already exists, it will be overridden by the context.</param>
+		/// <returns>True if the key/value was added.</returns>
+		public bool TryAddContext(string key, ITreeContext context, bool overwrite)
+		{
+            if (!overwrite && this.context.ContainsKey(key)) { return false; }
+
+			this.context[key] = context;
+			return true;
+        }
+
+		/// <summary>
+		/// Tries to fetch a context from the dictionary.
+		/// </summary>
+		/// <param name="key">The key to fetch with.</param>
+		/// <param name="context">The found context. Null if key not found.</param>
+		/// <returns>True if the key was found.</returns>
+		public bool TryGetContext(string key, out ITreeContext context)
+		{
+			if (this.context.TryGetValue(key, out context)) { return true; }
+
+			return false;
+		}
+
+		/// <summary>
+		/// Tries to remove all keys that have a certain context as their value.
+		/// </summary>
+		/// <param name="context">The context to remove.</param>
+		/// <returns>True if the context was removed.</returns>
+		public bool RemoveContext(ITreeContext context)
+		{
+			List<string> keysToRemove = new List<string>();
+			bool removed = false;
+
+			foreach (var pair in this.context)
+			{
+				if (pair.Value == context)
+				{					
+					keysToRemove.Add(pair.Key);
+					removed = true;
+				}
+			}
+
+			foreach (var key in keysToRemove)
+			{
+                this.context.Remove(key);
+			}
+
+			return removed;
+		}
+
+		/// <summary>
+		/// Tries to remove a context from the context dictionary.
+		/// </summary>
+		/// <param name="key">The key to remove.</param>
+		/// <returns>True if the key was removed.</returns>
+		public bool RemoveContext(string key)
+		{
+			return this.context.Remove(key);
+		}
+
+        private void DebugResult(TreeResponse result)
+        {
+            if (result?.Origin != null)
+            {
+                Debug.Log($"{gameObject.name} SceneTree result: {result.Result} from {result.Origin}");
+            }
         }
     }
 }

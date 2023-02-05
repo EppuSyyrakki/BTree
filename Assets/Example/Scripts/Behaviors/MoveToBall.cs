@@ -21,7 +21,7 @@ public class MoveToBall : Leaf<NoContext>
     {
         if (player.Ball == null)
         {
-            Result = Result.Failure;
+            Response.Result = Result.Failure;
             return;
         }
 
@@ -34,7 +34,7 @@ public class MoveToBall : Leaf<NoContext>
 
         if ((player.transform.position - player.Ball.transform.position).sqrMagnitude < 2f)
         {           
-            Result = Result.Success;
+            Response.Result = Result.Success;
             return;
         }
 

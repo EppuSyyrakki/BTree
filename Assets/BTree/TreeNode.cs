@@ -11,22 +11,25 @@ namespace BTree
         [SerializeField, Output(connectionType = ConnectionType.Override)]
         protected TreeResponse output;
 
-        protected Tree tree;		
 		protected TreeNode[] children;
+		protected bool initialized = false;
 
         internal TreeNode parent;
 
+		protected TreeAgent Agent { get; private set;
+		}
         /// <summary>
         /// Use this instead of Node.Init() to reset all variables and get child node(s).
-        /// <param name="t">The tree that has this node in it.</param>
+        /// <param name="agent">The tree that has this node in it.</param>
         /// </summary>
-        internal virtual void Setup(Tree t)
+        internal virtual void Setup(TreeAgent agent)
 		{
-            tree = t;
-            children = GetChildNodes();			
+            Agent = agent;
+            children = GetChildNodes();
+			initialized = true;
 		}
 
-		private TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.
+		protected virtual TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.
 		{
             List<TreeNode> connectedChildren = new List<TreeNode>();           
 			var inputs = Inputs.ToArray();

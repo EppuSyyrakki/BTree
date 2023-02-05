@@ -13,11 +13,15 @@ namespace BTree
 		public List<Condition> Conditions { get; private set; }
 		public Result Result { get; internal set; }
 		
-		public TreeResponse(ILeaf origin, Result result)
+		public TreeResponse(ILeaf origin)
 		{
 			Origin = origin;
-			Result = result;
 			Conditions = new List<Condition>();
+		}
+
+		public TreeResponse(Result result)
+		{
+			Result = result;
 		}
 
 		public bool CheckConditions()
@@ -26,6 +30,7 @@ namespace BTree
 			{
 				if (cond.Check()) { continue; }
 
+				Result = Result.Failure;
                 cond.Host.RecursiveFail();
                 return false;
             }
@@ -36,7 +41,6 @@ namespace BTree
 
     public enum Result
 	{
-		Waiting,
 		Running,
 		Success,
 		Failure,

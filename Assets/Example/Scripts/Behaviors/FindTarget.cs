@@ -16,7 +16,7 @@ public class FindTarget : Leaf<ITreeContext>
     {
         if (Vector3.Distance(ball, player.transform.position) > 1.5f)
         {
-            Result = Result.Failure;
+            Response.Result = Result.Failure;
             return;
         }
 
@@ -29,7 +29,7 @@ public class FindTarget : Leaf<ITreeContext>
             Context = FindTeamMate();
         }
         
-        Result = Result.Success;
+        Response.Result = Result.Success;
     }
 
     protected override void OnExit()

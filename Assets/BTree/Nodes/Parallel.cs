@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using XNode;
 using UnityEngine;
-using System.Linq;
 
 namespace BTree
 {
@@ -17,29 +16,29 @@ namespace BTree
         private TreeResponse input;
 
         private List<Condition> conditionNodes;
-
-        internal override void Setup(Tree t)
-        {
-            tree = t;
-            children = GetChildNodes();
-        }
+        private TreeResponse storedResponse = null;
 
         public override object GetValue(NodePort port)
 		{
-            if (tree == null) { return null; }
+            if (!initialized) { return null; }
+            
+            if (storedResponse != null) { return storedResponse; }
 
             var response = GetChildResponse();
             response.Conditions.AddRange(conditionNodes);
 
             if (!response.CheckConditions())
-            {
-                response.Result = Result.Failure;
+            {                
+                response.Origin.Response.Result = Result.Failure;
+                response.Conditions.Clear();
+                storedResponse = response;
+                return storedResponse;
             }
 
             return response;
 		}
 
-        private TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.
+        protected override TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.
         {
             List<TreeNode> connectedChildren = new List<TreeNode>();
             conditionNodes = new List<Condition>();
@@ -67,6 +66,11 @@ namespace BTree
             }
 
             return connectedChildren.ToArray();
+        }
+
+        internal override void ResetNode()
+        {
+            storedResponse = null;
         }
     }
 }

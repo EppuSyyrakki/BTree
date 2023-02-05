@@ -15,6 +15,10 @@ PrefabInstance:
       propertyPath: team
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3350945799436325928, guid: 4ea15660174068c4496cfcec0f2ccf01, type: 3}
+      propertyPath: treeAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 911437174b6a7be4b9eceefb65d66770, type: 2}
     - target: {fileID: 3905578239845869197, guid: 4ea15660174068c4496cfcec0f2ccf01, type: 3}
       propertyPath: m_RootOrder
       value: 0

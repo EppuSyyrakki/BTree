@@ -36,7 +36,7 @@ namespace BTree
 
 		private TreeResponse Resolve(TreeResponse response)
 		{
-            if (response.Result == Result.Running || response.Result == Result.Waiting)
+            if (response.Result == Result.Running) // || response.Result == Result.Waiting)
             {
                 // If child is running or waiting, send it on as is.
                 return response;
@@ -60,7 +60,8 @@ namespace BTree
                 }
             }
 
-            return response;
+            storedResponse = response;
+            return storedResponse;
         }
 	}
 }

@@ -26,15 +26,14 @@ namespace BTree
         private float elapsed = 0;		
 		private T context;
 
-		protected TreeAgent Agent { get; private set; }
-        public Result Result { get; set; }
+        public TreeResponse Response { get; set; }
         protected T Context
         {
             get
             {
                 if (context is NoContext)
                 {
-                    Debug.LogError($"{tree.agent.gameObject}.{this} trying to use context while having NoContext type");
+                    Debug.LogError($"{Agent}.{this} trying to use context while having NoContext type");
                     return null;
                 }
 
@@ -55,30 +54,29 @@ namespace BTree
 
             if (elapsed > maxDuration)
             {
-                Result = Result.Failure;
+                Response.Result = Result.Failure;
             }
         }
 
-		public void Enter(TreeAgent agent)
+		public void Enter()
 		{
             elapsed = 0;
-            Agent = agent;
-            Result = Result.Running;
+            Response.Result = Result.Running;
 
             if (!string.IsNullOrEmpty(inContext))
             {
-                if (tree.TryGetContext(inContext, out ITreeContext context))
+                if (base.Agent.TryGetContext(inContext, out ITreeContext context))
                 {
                     this.context = context as T;
                 }
                 else
                 {
-                    if (tree.debugTree)
+                    if (base.Agent.debugTree)
                     {
-                        Debug.LogWarning($"{agent.gameObject}.{this} could not find InputVariable {inContext}.");
+                        Debug.LogWarning($"{Agent}.{this} could not find InputVariable {inContext}.");
                     }
-                    
-                    Result = Result.Failure;
+
+                    Response.Result = Result.Failure;
                 }
             }
 
@@ -99,19 +97,19 @@ namespace BTree
             {
                 if (context == null)
                 {
-                    if (tree.debugTree)
+                    if (Agent.debugTree)
                     {
-                        Debug.LogWarning($"{tree.agent.gameObject.name} TreeAgent: context {outContext} not set.");
+                        Debug.LogWarning($"{Agent} TreeAgent: context {outContext} not set.");
                     }
                     
                     return;
                 }
 
-                if (!tree.TryAddContext(outContext, context, overwriteOut))
+                if (!Agent.TryAddContext(outContext, context, overwriteOut))
                 {
-                    if (tree.debugTree)
+                    if (Agent.debugTree)
                     {
-                        Debug.LogWarning($"{tree.agent.gameObject.name} TreeAgent: context {outContext} already exists.");
+                        Debug.LogWarning($"{Agent} TreeAgent: context {outContext} already exists.");
                     }                   
                 }                
             }
@@ -125,22 +123,21 @@ namespace BTree
 
         internal override void ResetNode()
 		{
-            Result = Result.Waiting;
+            Response.Result = Result.Running;
             context = null;
-            Agent = null;
             elapsed = 0;
 		}
 
-		internal override void Setup(Tree t)
+		internal override void Setup(TreeAgent agent)
 		{
-			ResetNode();
-
-			if (tree == null) { tree = t; }
+            Response = new TreeResponse(this);
+            ResetNode();
+            base.Setup(agent);
 		}
 
         public void Fail()
         {
-            Result = Result.Failure;
+            Response.Result = Result.Failure;
             context = null;
         }
 		
@@ -150,7 +147,7 @@ namespace BTree
 		/// </summary>
 		public override object GetValue(NodePort port)
 		{	
-			return new TreeResponse(this, Result);
+			return Response;
 		}
 	}
 }

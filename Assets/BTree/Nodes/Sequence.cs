@@ -10,6 +10,9 @@ namespace BTree
 	/// </summary>
 	public class Sequence : TreeNode
 	{
+		[SerializeField]
+		private bool haltOnFailure = true;
+
 		[SerializeField, Input(dynamicPortList: true, connectionType: ConnectionType.Override)]
 		protected TreeResponse input;
 
@@ -37,13 +40,14 @@ namespace BTree
 
 		private TreeResponse Resolve(TreeResponse response)
 		{
-			if (response.Result == Result.Running || response.Result == Result.Waiting)
+			if (response.Result == Result.Running) // || response.Result == Result.Waiting)
 			{
 				// If child is running, send it on as is.
 				return response;
 			}
 
-			if (response.Result == Result.Success)
+			if (response.Result == Result.Success
+				|| (!haltOnFailure && response.Result == Result.Failure))
 			{
 				if (HasNextChild)
 				{

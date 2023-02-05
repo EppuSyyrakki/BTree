@@ -23,7 +23,7 @@ public class MoveToDefend : Leaf<NoContext>
     {     
         if (player.Ball == null)
         {
-            Result = Result.Failure;
+            Response.Result = Result.Failure;
             return;
         }
 
@@ -41,7 +41,7 @@ public class MoveToDefend : Leaf<NoContext>
 
             if (timer > maxDuration)
             {
-                Result = Result.Success;
+                Response.Result = Result.Success;
                 player.IsDefending = false;
             }
         }
