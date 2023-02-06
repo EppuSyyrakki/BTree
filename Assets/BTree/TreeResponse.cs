@@ -13,25 +13,18 @@ namespace BTree
 		public List<Condition> Conditions { get; private set; }
 		public Result Result { get; internal set; }
 		
-		public TreeResponse(ILeaf origin)
-		{
-			Origin = origin;
-			Conditions = new List<Condition>();
-		}
-
-		public TreeResponse(Result result)
-		{
-			Result = result;
-		}
+		internal TreeResponse(ILeaf origin) : this() { Origin = origin; }
+		internal TreeResponse(Result result) : this() { Result = result; }
+		private TreeResponse() { Conditions = new List<Condition>(); }
 
 		public bool CheckConditions()
 		{
-			foreach (var cond in Conditions)
+			foreach (var c in Conditions)
 			{
-				if (cond.Check()) { continue; }
+				if (c.Check()) { continue; }
 
 				Result = Result.Failure;
-                cond.Host.RecursiveFail();
+                c.Host.RecursiveFail();
                 return false;
             }
 
@@ -41,7 +34,7 @@ namespace BTree
 
     public enum Result
 	{
-		Running,
+		Running = 0,
 		Success,
 		Failure,
 	}

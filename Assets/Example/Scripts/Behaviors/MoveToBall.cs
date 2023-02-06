@@ -9,9 +9,13 @@ public class MoveToBall : Leaf<NoContext>
     private Player player;
     private Vector3 target;
 
-    protected override void OnEnter()
+    protected override void OnSetup()
     {
         player = Agent as Player;
+    }
+
+    protected override void OnEnter()
+    {       
         var pos = GetLocation();
         target = player.MoveTo(pos);
         player.MovingToBall = true;
@@ -44,14 +48,6 @@ public class MoveToBall : Leaf<NoContext>
     protected override void OnExit()
     {
         player.MovingToBall = false;
-        //player.MoveTo(player.transform.position);
-    }
-
-    internal override void ResetNode()
-    {
-        base.ResetNode();
-        player = null;
-        target = default;
     }
 
     private Vector3 GetLocation()
@@ -61,4 +57,11 @@ public class MoveToBall : Leaf<NoContext>
 
         return behindBall;
     }
+
+    protected override void OnReset()
+    {
+        target = default;
+    }
+
+    protected override void OnFail() { }
 }

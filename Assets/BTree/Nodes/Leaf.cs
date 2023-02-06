@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using XNode;
 
 namespace BTree
@@ -14,10 +13,10 @@ namespace BTree
         [SerializeField, Tooltip("Negative value means indefinite.")]
         protected float maxDuration = -1f;
 
-		[SerializeField, Tooltip("")]
+		[SerializeField, Tooltip("Try to get a context with this name when entering this node.")]
 		private string inContext;
 
-		[SerializeField, Tooltip("")]
+		[SerializeField, Tooltip("Try to add a context with this name when exiting this node.")]
 		private string outContext;
 
 		[SerializeField, Tooltip("")]
@@ -42,21 +41,14 @@ namespace BTree
             set => context = value;
         }
 
-        /// <summary>
-        /// Override this to create actionable nodes that get sent to the agent after the tree is evaluated. 
-        /// The base implementation only advances the timer.
-        /// </summary>
-        public virtual void Execute()
+        internal sealed override void Setup(TreeAgent agent)
         {
-            if (maxDuration < 0) { return; }
-
-            elapsed += Time.deltaTime;
-
-            if (elapsed > maxDuration)
-            {
-                Response.Result = Result.Failure;
-            }
+            Response = new TreeResponse(this);
+            base.Setup(agent);
+            OnSetup();
         }
+
+        protected abstract void OnSetup();
 
 		public void Enter()
 		{
@@ -65,13 +57,13 @@ namespace BTree
 
             if (!string.IsNullOrEmpty(inContext))
             {
-                if (base.Agent.TryGetContext(inContext, out ITreeContext context))
+                if (Agent.TryGetContext(inContext, out ITreeContext context))
                 {
                     this.context = context as T;
                 }
                 else
                 {
-                    if (base.Agent.debugTree)
+                    if (Agent.debugTree)
                     {
                         Debug.LogWarning($"{Agent}.{this} could not find InputVariable {inContext}.");
                     }
@@ -89,11 +81,27 @@ namespace BTree
         /// </summary>
 		protected abstract void OnEnter();
 
-		public void Exit()
+        /// <summary>
+        /// Override this to create actionable nodes that get sent to the agent after the tree is evaluated. 
+        /// The base implementation only advances the timer.
+        /// </summary>
+        public virtual void Execute()
+        {
+            if (maxDuration < 0) { return; }
+
+            elapsed += Time.deltaTime;
+
+            if (elapsed > maxDuration)
+            {
+                Response.Result = Result.Failure;
+            }
+        }
+
+        public void Exit()
 		{
             OnExit();
 
-            if (!String.IsNullOrEmpty(outContext)) 
+            if (!string.IsNullOrEmpty(outContext)) 
             {
                 if (context == null)
                 {
@@ -121,31 +129,29 @@ namespace BTree
         /// </summary>
         protected abstract void OnExit();
 
-        internal override void ResetNode()
+        internal sealed override void ResetNode()
 		{
             Response.Result = Result.Running;
             context = null;
             elapsed = 0;
+            OnReset();
 		}
 
-		internal override void Setup(TreeAgent agent)
-		{
-            Response = new TreeResponse(this);
-            ResetNode();
-            base.Setup(agent);
-		}
+        protected abstract void OnReset();
 
         public void Fail()
         {
             Response.Result = Result.Failure;
             context = null;
         }
+
+        protected abstract void OnFail();
 		
 		/// <summary>
 		/// Override this method to create checks that need to return a value while the tree is Evaluated.
         /// Returning Success/Failure will make the tree skip Enter/Execute/Exit methods when it's being run.
 		/// </summary>
-		public override object GetValue(NodePort port)
+		public sealed override object GetValue(NodePort port)
 		{	
 			return Response;
 		}

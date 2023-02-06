@@ -5,9 +5,9 @@ public class Idle : Leaf<ITreeContext>
 {
     private float idleTime;
 
-    protected override void OnEnter()
-    {
-    }
+    protected override void OnSetup() { }
+
+    protected override void OnEnter() { }
 
     public override void Execute()
     {
@@ -16,13 +16,12 @@ public class Idle : Leaf<ITreeContext>
         if (idleTime > maxDuration) { Response.Result = Result.Success; }        
     }
 
-    protected override void OnExit()
-    {
-    }
+    protected override void OnExit() { }
 
-    internal override void ResetNode()
+    protected override void OnReset()
     {
-        base.ResetNode();
         idleTime = 0;
     }
+
+    protected override void OnFail() { }
 }

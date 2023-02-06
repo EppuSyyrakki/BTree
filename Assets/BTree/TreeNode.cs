@@ -14,10 +14,8 @@ namespace BTree
 		protected TreeNode[] children;
 		protected bool initialized = false;
 
-        internal TreeNode parent;
+		protected TreeAgent Agent { get; private set; }
 
-		protected TreeAgent Agent { get; private set;
-		}
         /// <summary>
         /// Use this instead of Node.Init() to reset all variables and get child node(s).
         /// <param name="agent">The tree that has this node in it.</param>
@@ -42,7 +40,6 @@ namespace BTree
 
 				if (node != null)
 				{
-					node.parent = this;
 					connectedChildren.Add(node);
 				}
 			}

@@ -6,9 +6,14 @@ public class FindTarget : Leaf<ITreeContext>
     private Vector3 ball;
     private Player player;
 
+    protected override void OnSetup()
+    {
+        player = Agent as Player;
+    }
+
     protected override void OnEnter()
     {        
-        player = Agent as Player;
+        
         ball = player.Ball.transform.position;
     }
 
@@ -32,16 +37,14 @@ public class FindTarget : Leaf<ITreeContext>
         Response.Result = Result.Success;
     }
 
-    protected override void OnExit()
+    protected override void OnExit() { }
+
+    protected override void OnReset()
     {
+        ball = default;
     }
 
-    internal override void ResetNode()
-    {
-        base.ResetNode();
-        ball = default;
-        player = null;
-    }
+    protected override void OnFail() { }
 
     private bool IsBlocked(Vector3 target)
     {

@@ -10,10 +10,13 @@ public class MoveToDefend : Leaf<NoContext>
     private Vector3 target;
     private float timer;
 
-    protected override void OnEnter()
+    protected override void OnSetup()
     {
         player = Agent as Player;
-        player.IsDefending = true;
+    }
+
+    protected override void OnEnter()
+    {      
         var pos = GetLocation();
         target = player.MoveTo(pos);
         timer = 0;
@@ -31,6 +34,7 @@ public class MoveToDefend : Leaf<NoContext>
         {
             var pos = GetLocation();
             target = player.MoveTo(pos);
+            player.IsDefending = false;
             return;
         }
 
@@ -45,23 +49,19 @@ public class MoveToDefend : Leaf<NoContext>
                 player.IsDefending = false;
             }
         }
-        else
-        {
-            player.IsDefending = false;
-        }
     }
     protected override void OnExit() { }
-
-    internal override void ResetNode()
-    {
-        base.ResetNode();
-        player = null;
-        target = default;
-    }
 
     private Vector3 GetLocation()
     {
         Vector3 between = (player.Ball.transform.position - player.OwnGoal.transform.position) * 0.5f;
         return player.OwnGoal.transform.position + between;
     }
+
+    protected override void OnReset()
+    {
+        target = default;
+    }
+
+    protected override void OnFail() { }
 }

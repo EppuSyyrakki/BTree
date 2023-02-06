@@ -25,11 +25,15 @@ namespace BTree
             if (storedResponse != null) { return storedResponse; }
 
             var response = GetChildResponse();
-            response.Conditions.AddRange(conditionNodes);
+
+            if (response.Result != Result.Failure)
+            {
+                response.Conditions.AddRange(conditionNodes);
+            }            
 
             if (!response.CheckConditions())
-            {                
-                response.Origin.Response.Result = Result.Failure;
+            {
+                response.Result = Result.Failure;
                 response.Conditions.Clear();
                 storedResponse = response;
                 return storedResponse;
@@ -51,8 +55,6 @@ namespace BTree
 
                 if (node != null)
                 {
-                    node.parent = this;
-
                     if (node is Condition c)    // add conditions to a separate list.
                     {
                         c.Host = this;

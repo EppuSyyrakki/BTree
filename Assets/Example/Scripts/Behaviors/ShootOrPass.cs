@@ -2,7 +2,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Example of using the In Context to fetch a generic context from the tree, and handling a null context.
+/// Example of using the In Context to fetch a generic context from the tree through only the ITreeContext 
+/// interface, and handling a null context.
 /// </summary>
 public class ShootOrPass : Leaf<ITreeContext>
 {
@@ -11,6 +12,13 @@ public class ShootOrPass : Leaf<ITreeContext>
 
     [SerializeField]
     private float passPower = 5f;
+
+    private Player player;
+
+    protected override void OnSetup()
+    {
+        player = Agent as Player;
+    }
 
     protected override void OnEnter()
     {
@@ -21,7 +29,7 @@ public class ShootOrPass : Leaf<ITreeContext>
         }
 
         bool isGoal = Context is Goal;        
-        var rb = (Agent as Player).Ball.GetComponent<Rigidbody>();
+        var rb = player.Ball.GetComponent<Rigidbody>();
 
         if (rb.velocity.sqrMagnitude > 10f || (rb.position - Agent.transform.position).sqrMagnitude > 2.5f)
         {
@@ -30,7 +38,6 @@ public class ShootOrPass : Leaf<ITreeContext>
         }
 
         float power = isGoal ? shotPower : passPower;
-        Debug.Log(Agent.name + (isGoal ? " shoots!" : " passes"));
         Vector3 force = (Context.transform.position - rb.position).normalized * power;
         Vector3 lead = isGoal ? Vector3.zero : Context.transform.forward;
         Debug.DrawLine(Agent.transform.position, Agent.transform.position + force, Color.blue, 2f);
@@ -38,9 +45,11 @@ public class ShootOrPass : Leaf<ITreeContext>
         Response.Result = Result.Success;
     }
 
-    protected override void OnExit()
-    {
-    }
+    protected override void OnExit() { }
+
+    protected override void OnFail() { }
+
+    protected override void OnReset() { }
 
     private void Lob()
     {
