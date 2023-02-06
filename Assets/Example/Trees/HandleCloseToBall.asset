@@ -34,7 +34,7 @@ MonoBehaviour:
   inContext: 
   outContext: 
   overwriteOut: 1
---- !u!114 &-7354443017928108373
+--- !u!114 &-5351374921706567882
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,18 +43,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 12e477b6439e8644eb5daae12fb9a4eb, type: 3}
   m_Name: Root (HandleCloseToBall)
-  m_EditorClassIdentifier: Assembly-CSharp:BTree:Root
+  m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 8, y: -8}
+  position: {x: -24, y: -88}
   ports:
     keys:
+    - interruptions
     - input
     - output
     values:
+    - _fieldName: interruptions
+      _node: {fileID: -5351374921706567882}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
     - _fieldName: input
-      _node: {fileID: -7354443017928108373}
+      _node: {fileID: -5351374921706567882}
       _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
@@ -66,7 +76,7 @@ MonoBehaviour:
       _typeConstraint: 0
       _dynamic: 0
     - _fieldName: output
-      _node: {fileID: -7354443017928108373}
+      _node: {fileID: -5351374921706567882}
       _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
@@ -94,7 +104,7 @@ MonoBehaviour:
   - {fileID: -8787733917675388832}
   - {fileID: 6702865750709678192}
   - {fileID: 3862937773836023354}
-  - {fileID: -7354443017928108373}
+  - {fileID: -5351374921706567882}
 --- !u!114 &538267512350864690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,7 +280,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: input
-        node: {fileID: -7354443017928108373}
+        node: {fileID: -5351374921706567882}
         reroutePoints: []
       _direction: 1
       _connectionType: 1

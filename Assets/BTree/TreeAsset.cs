@@ -7,7 +7,7 @@ namespace BTree
 	/// Used in the editor to predefine the behaviour tree. Is copied as a scene asset to agents on Awake()
 	/// </summary>
 	[CreateAssetMenu(fileName = "New Behaviour Tree", menuName = "BTree/New Behaviour Tree")]
-	[RequireNode(typeof(Root))]
+	//[RequireNode(typeof(Root))]
 	public class TreeAsset : NodeGraph
 	{
         public Root Root { get; private set; }
