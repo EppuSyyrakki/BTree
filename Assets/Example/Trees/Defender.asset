@@ -31,7 +31,7 @@ MonoBehaviour:
       _typeConstraint: 0
       _dynamic: 0
   invert: 1
---- !u!114 &-6357466063079134692
+--- !u!114 &-6306878746281370410
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,18 +40,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12e477b6439e8644eb5daae12fb9a4eb, type: 3}
-  m_Name: Root
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 0}
+  m_Name: Root (Defender)
+  m_EditorClassIdentifier: Assembly-CSharp:BTree:Root
   graph: {fileID: 11400000}
-  position: {x: 0, y: 0}
+  position: {x: -8, y: -8}
   ports:
     keys:
     - input
     - output
     values:
     - _fieldName: input
-      _node: {fileID: -6357466063079134692}
+      _node: {fileID: -6306878746281370410}
       _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
@@ -63,7 +63,7 @@ MonoBehaviour:
       _typeConstraint: 0
       _dynamic: 0
     - _fieldName: output
-      _node: {fileID: -6357466063079134692}
+      _node: {fileID: -6306878746281370410}
       _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
@@ -81,7 +81,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e656c50adbf356c4ab2789cc571f6fb6, type: 3}
-  m_Name: Parallel
+  m_Name: While
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
   position: {x: -744, y: -40}
@@ -198,7 +198,7 @@ MonoBehaviour:
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 0
-  maxDuration: -1
+  maxDuration: 3
   inContext: 
   outContext: 
   overwriteOut: 1
@@ -240,7 +240,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: input
-        node: {fileID: -6357466063079134692}
+        node: {fileID: -6306878746281370410}
         reroutePoints: []
       _direction: 1
       _connectionType: 1
@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e656c50adbf356c4ab2789cc571f6fb6, type: 3}
-  m_Name: Parallel
+  m_Name: While
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
   position: {x: -744, y: 216}
@@ -361,18 +361,18 @@ MonoBehaviour:
   m_Name: Defender
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: -6357466063079134692}
   - {fileID: 1687354043174510921}
   - {fileID: 2228007840240765931}
   - {fileID: 890254179727020999}
   - {fileID: -9076220317871772158}
   - {fileID: -2769986046882326684}
-  - {fileID: -4204713732144892314}
   - {fileID: -1849922110862241298}
   - {fileID: 6654452820231897359}
-  - {fileID: -379760327613055547}
   - {fileID: -3517514591870963396}
   - {fileID: 4373532451665837097}
+  - {fileID: -379760327613055547}
+  - {fileID: -4204713732144892314}
+  - {fileID: -6306878746281370410}
 --- !u!114 &890254179727020999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,7 +483,7 @@ MonoBehaviour:
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 0
-  maxDuration: 2.5
+  maxDuration: 2
   inContext: 
   outContext: 
   overwriteOut: 1
@@ -517,7 +517,7 @@ MonoBehaviour:
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 0
-  maxDuration: 1
+  maxDuration: 0.75
   inContext: 
   outContext: 
   overwriteOut: 1

@@ -11,7 +11,7 @@ namespace BTree
         private TreeAsset tree;
         private TreeResponse storedResponse = null;
 
-        internal override void Setup(TreeAgent agent)
+        protected override void Setup(TreeAgent agent)
         {
             if (subTree == null) 
             { 

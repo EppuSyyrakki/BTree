@@ -45,7 +45,7 @@ namespace BTree
                 current.Origin.Execute();
             }
 
-            if (current.Origin.Response.Result == Result.Running) { return; }
+            if (current.Result == Result.Running) { return; }
 
 			current.Origin.Exit();
 
@@ -75,22 +75,22 @@ namespace BTree
 		/// <summary>
 		/// Recursively travel the tree to find Result.Running.
 		/// </summary>
-		/// <param name="leaf">The new leaf found from the tree. Null if nothing found.</param>
-		/// <returns>True if runnable leaf found, false if not.</returns>
-		internal bool Evaluate(out TreeResponse result)
+		/// <param name="response">The response from the tree. Null if nothing found.</param>
+		/// <returns>True if runnable response found, false if not.</returns>
+		internal bool Evaluate(out TreeResponse response)
         {
 			if (debugTree) { Debug.Log(gameObject.name + " evaluating tree..."); }
 		
             // Recursively travel the tree toward first waiting result.
-            result = Tree.Root.Response;
+            response = Tree.Root.Response;
 
-            if (result.Result != Result.Running || result.Origin == null) 
+            if (response.Result != Result.Running || response.Origin == null) 
 			{
-				if (debugTree) { Debug.Log($"{gameObject.name} received {result.Result} from {result.Origin}"); }
+				if (debugTree) { Debug.Log($"{gameObject.name} received {response.Result} from {response.Origin}"); }
                 return false;
 			}
 
-            if (debugTree) { DebugResult(result); }
+            if (debugTree) { DebugResult(response); }
 
 			return true;
         }

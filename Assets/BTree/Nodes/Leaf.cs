@@ -41,7 +41,7 @@ namespace BTree
             set => context = value;
         }
 
-        internal sealed override void Setup(TreeAgent agent)
+        protected sealed override void Setup(TreeAgent agent)
         {
             Response = new TreeResponse(this);
             base.Setup(agent);
@@ -65,7 +65,7 @@ namespace BTree
                 {
                     if (Agent.debugTree)
                     {
-                        Debug.LogWarning($"{Agent}.{this} could not find InputVariable {inContext}.");
+                        Debug.LogWarning($"{Agent}.{this} could not find inContext {inContext}.");
                     }
 
                     Response.Result = Result.Failure;
@@ -82,8 +82,9 @@ namespace BTree
 		protected abstract void OnEnter();
 
         /// <summary>
-        /// Override this to create actionable nodes that get sent to the agent after the tree is evaluated. 
-        /// The base implementation only advances the timer.
+        /// Override this to create actionable nodes that get sent to the agent after the tree is evaluated and the path
+        /// to this node returns a Result.Running within its TreeResponse. Base implementation only advances the timer 
+        /// and fails if it is > maxDuration.
         /// </summary>
         public virtual void Execute()
         {
@@ -107,7 +108,7 @@ namespace BTree
                 {
                     if (Agent.debugTree)
                     {
-                        Debug.LogWarning($"{Agent} TreeAgent: context {outContext} not set.");
+                        Debug.LogWarning($"{Agent}.{this} outContext {outContext} not set.");
                     }
                     
                     return;
@@ -117,7 +118,7 @@ namespace BTree
                 {
                     if (Agent.debugTree)
                     {
-                        Debug.LogWarning($"{Agent} TreeAgent: context {outContext} already exists.");
+                        Debug.LogWarning($"{Agent}.{this} outContext {outContext} already exists.");
                     }                   
                 }                
             }

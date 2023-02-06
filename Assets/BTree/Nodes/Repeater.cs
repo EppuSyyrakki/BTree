@@ -8,7 +8,7 @@ namespace BTree
 	/// </summary>
 	public class Repeater : TreeNode
 	{
-        [SerializeField, Input(dynamicPortList: false, connectionType = ConnectionType.Override)]
+        [SerializeField, Input(dynamicPortList: false, connectionType: ConnectionType.Override)]
         protected TreeResponse input;
 
         [SerializeField, Tooltip("0 <= repeats indefinitely")]

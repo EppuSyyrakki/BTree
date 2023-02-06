@@ -7,7 +7,7 @@ namespace BTree
     /// <summary>
     /// 
     /// </summary>    
-	public class Parallel : TreeNode
+	public class While : TreeNode
 	{
         [SerializeField, Input(dynamicPortList: true, connectionType: ConnectionType.Override)]
         private TreeResponse conditions;
@@ -15,7 +15,7 @@ namespace BTree
         [SerializeField, Input(dynamicPortList: false, connectionType: ConnectionType.Override)]
         private TreeResponse input;
 
-        private List<Condition> conditionNodes;
+        private List<Condition> conditionNodes = null;
         private TreeResponse storedResponse = null;
 
         public override object GetValue(NodePort port)
@@ -29,14 +29,14 @@ namespace BTree
             if (response.Result != Result.Failure)
             {
                 response.Conditions.AddRange(conditionNodes);
-            }            
 
-            if (!response.CheckConditions())
-            {
-                response.Result = Result.Failure;
-                response.Conditions.Clear();
-                storedResponse = response;
-                return storedResponse;
+                if (!response.CheckConditions())
+                {
+                    response.Result = Result.Failure;
+                    response.Conditions.Clear();
+                    storedResponse = response;
+                    return storedResponse;
+                }
             }
 
             return response;
@@ -51,14 +51,12 @@ namespace BTree
             {
                 if (port.Connection == null) { continue; }
 
-                var node = port.Connection.node as TreeNode;
-
-                if (node != null)
+                if (port.Connection.node is TreeNode node)
                 {
-                    if (node is Condition c)    // add conditions to a separate list.
+                    if (node is Condition condition)    // add conditions to a separate list.
                     {
-                        c.Host = this;
-                        conditionNodes.Add(c);                        
+                        condition.Host = this;
+                        conditionNodes.Add(condition);                        
                     }
                     else
                     {

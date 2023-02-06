@@ -20,7 +20,7 @@ namespace BTree
         /// Use this instead of Node.Init() to reset all variables and get child node(s).
         /// <param name="agent">The tree that has this node in it.</param>
         /// </summary>
-        internal virtual void Setup(TreeAgent agent)
+        protected virtual void Setup(TreeAgent agent)
 		{
             Agent = agent;
             children = GetChildNodes();
@@ -96,6 +96,25 @@ namespace BTree
 				}
 			}
 		}
+
+		/// <summary>
+		/// Iterates over all inputs and calls this method on connected TreeNodes.
+		/// </summary>
+		/// <param name="agent">The TreeAgent running this tree instance.</param>
+		internal void RecursiveSetup(TreeAgent agent)
+		{
+			Setup(agent);
+
+            foreach (var port in Inputs)
+            {
+				if (port.Connection == null) { continue; }
+                
+				if (port.Connection.node is TreeNode node)
+				{
+					node.RecursiveSetup(agent);
+				}
+            }
+        }
 
 		/// <summary>
 		/// Use this to reset any member variables in inheriting classes.

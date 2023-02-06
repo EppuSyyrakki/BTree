@@ -5,7 +5,7 @@ namespace BTree
 {
 	public class Inverter : TreeNode
 	{
-        [SerializeField, Input(dynamicPortList: false, connectionType = ConnectionType.Override)]
+        [SerializeField, Input(dynamicPortList: false, connectionType: ConnectionType.Override)]
         protected TreeResponse input;
 
         public override object GetValue(NodePort port)

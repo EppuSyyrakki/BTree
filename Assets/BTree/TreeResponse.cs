@@ -19,12 +19,19 @@ namespace BTree
 
 		public bool CheckConditions()
 		{
-			foreach (var c in Conditions)
+			foreach (var condition in Conditions)
 			{
-				if (c.Check()) { continue; }
+				if (condition.Check()) { continue; }
 
-				Result = Result.Failure;
-                c.Host.RecursiveFail();
+				if (condition.Host == null)	// The condition is used as a Leaf
+				{
+                    Result = Result.Failure;
+                }
+				else
+				{
+                    condition.Host.RecursiveFail();
+                }
+                
                 return false;
             }
 

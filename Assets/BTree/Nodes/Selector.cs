@@ -8,7 +8,7 @@ namespace BTree
 	/// </summary>
 	public class Selector : TreeNode
 	{
-        [SerializeField, Input(dynamicPortList: true, connectionType = ConnectionType.Override)]
+        [SerializeField, Input(dynamicPortList: true, connectionType: ConnectionType.Override)]
         protected TreeResponse input;
 
         private int index;
