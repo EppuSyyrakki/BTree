@@ -18,8 +18,14 @@ namespace BTree
         
         internal bool Check()
         {
-            bool result = OnCheck();
-            return invert ? !result : result;
+            if (!initialized) { return false; }
+
+            bool check = OnCheck();
+            bool result = invert ? !check : check;
+
+            if (Agent.debugTree && !result) { Debug.Log($"{Agent}.{this} failed."); }
+
+            return result;
         }
 
         protected abstract bool OnCheck();

@@ -11,6 +11,9 @@ public class Player : TreeAgent
     [SerializeField]
     private Team team;
 
+    [SerializeField, Range(2,8)]
+    private float defensiveRange = 5f;
+
     private NavMeshAgent navMeshAgent;
 
     public bool IsDefending { get; set; }
@@ -21,6 +24,7 @@ public class Player : TreeAgent
     public List<Player> TeamMates { get; private set; }
     public Vector3 Start { get; private set; }
     public Team Side => team;
+    public float DefensiveRange => defensiveRange;
 
     protected override void Awake()
     {

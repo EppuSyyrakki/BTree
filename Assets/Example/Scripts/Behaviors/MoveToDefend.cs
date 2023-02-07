@@ -30,15 +30,16 @@ public class MoveToDefend : Leaf<NoContext>
             return;
         }
 
-        if ((target - player.Ball.transform.position).sqrMagnitude > 3f)
+        Vector3 defensePos = GetLocation();
+
+        if ((target - defensePos).magnitude > 1f)
         {
-            var pos = GetLocation();
-            target = player.MoveTo(pos);
+            target = player.MoveTo(defensePos);
             player.IsDefending = false;
             return;
         }
 
-        if ((player.transform.position - target).sqrMagnitude < 1.5f)
+        if ((defensePos - player.transform.position).magnitude < 1f)
         {
             player.IsDefending = true;
             timer += Time.deltaTime;
@@ -54,8 +55,18 @@ public class MoveToDefend : Leaf<NoContext>
 
     private Vector3 GetLocation()
     {
-        Vector3 between = (player.Ball.transform.position - player.OwnGoal.transform.position) * 0.5f;
-        return player.OwnGoal.transform.position + between;
+        Vector3 goalToBall = player.Ball.transform.position - player.OwnGoal.transform.position;
+        Vector3 offset;
+
+        if (goalToBall.magnitude > player.DefensiveRange)
+        {
+            offset = goalToBall.normalized * player.DefensiveRange;
+        }
+        else
+        {
+            offset = goalToBall * player.DefensiveRange * 0.1f;
+        }
+        return player.OwnGoal.transform.position + offset;
     }
 
     protected override void OnReset()

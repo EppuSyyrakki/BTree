@@ -22,8 +22,6 @@ namespace Conditions
                 }
             }
 
-            if (Agent.debugTree) { Debug.Log($"{Agent} condition {this} failed!"); }
-
             return false;
         }
     }

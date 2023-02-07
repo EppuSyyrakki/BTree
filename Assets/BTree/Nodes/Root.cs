@@ -18,19 +18,22 @@ namespace BTree
 
         private Dictionary<string, Interrupt> interruptNodes = null;
 
-        //public TreeResponse Interrupt(string interruptId)
-        //{
-        //    if (interruptNodes.TryGetValue(interruptId, out Interrupt interrupt))
-        //    {
+        internal bool GetInterrupt(string interruptId, out Interrupt interrupt)
+        {
+            if (interruptNodes.TryGetValue(interruptId, out interrupt))
+            {
+                return true;
+            }
+            else if (Agent.debugTree)
+            {
+                Debug.LogWarning($"{Agent}.{this} could not find interrupt {interruptId}");               
+            }
 
-        //    }
-        //    else if (Agent.debugTree)
-        //    {
-        //        Debug.LogWarning($"{Agent}.{name} ");
-        //    }
-        //}
+            interrupt = null;
+            return false;
+        }
 
-		protected override TreeNode[] GetChildNodes()
+        protected override TreeNode[] GetChildNodes()
 		{
             List<TreeNode> connectedChildren = new List<TreeNode>();
             interruptNodes = new Dictionary<string, Interrupt>();

@@ -19,7 +19,7 @@ namespace BTree
 		[SerializeField, Tooltip("Try to add a context with this name when exiting this node.")]
 		private string outContext;
 
-		[SerializeField, Tooltip("")]
+		[SerializeField, Tooltip("If the Out Context already exists, overwrite it.")]
 		private bool overwriteOut = true;
 
         private float elapsed = 0;		
@@ -48,6 +48,10 @@ namespace BTree
             OnSetup();
         }
 
+        /// <summary>
+        /// Called after the base class has set up itself. Base class handles setting up Response and Agent property
+        /// before this is called.
+        /// </summary>
         protected abstract void OnSetup();
 
 		public void Enter()
@@ -138,14 +142,23 @@ namespace BTree
             OnReset();
 		}
 
+        /// <summary>
+        /// Called after the base class receives a Reset() call. Base class handles resetting Response and nulling
+        /// context.
+        /// </summary>
         protected abstract void OnReset();
 
         public void Fail()
         {
-            Response.Result = Result.Failure;
+            Response.Result = Result.Failure;           
             context = null;
+            OnFail();
         }
 
+        /// <summary>
+        /// Called after the base class receives a Fail() call. Base class handles failing Response and nulling
+        /// context.
+        /// </summary>
         protected abstract void OnFail();
 		
 		/// <summary>

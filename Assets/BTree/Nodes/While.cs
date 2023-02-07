@@ -28,15 +28,23 @@ namespace BTree
 
             if (response.Result != Result.Failure)
             {
+                // Not a failure, so check conditions
                 response.Conditions.AddRange(conditionNodes);
 
                 if (!response.CheckConditions())
                 {
+                    // Conditions failed, so pass failure
                     response.Result = Result.Failure;
                     response.Conditions.Clear();
                     storedResponse = response;
                     return storedResponse;
                 }
+            }
+            else
+            {
+                // Failure, cache response and send. No need to check conditions.
+                storedResponse = response;
+                return response;
             }
 
             return response;

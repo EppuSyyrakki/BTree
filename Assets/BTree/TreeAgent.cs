@@ -36,7 +36,7 @@ namespace BTree
         {
 			if (current == null)
             {
-                Evaluate(out current);
+                Tree.Evaluate(out current);
                 current.Origin.Enter();
             }
 
@@ -49,7 +49,7 @@ namespace BTree
 
 			current.Origin.Exit();
 
-            if (Evaluate(out TreeResponse next))
+            if (Tree.Evaluate(out TreeResponse next))
             {
                 next.Origin.Enter();
                 current = next;
@@ -66,35 +66,29 @@ namespace BTree
 		/// </summary>
         protected void Restart()
         {
-			if (debugTree) { Debug.Log(gameObject.name + " is resetting its behavior tree."); }
-
 			context.Clear();
 			Tree.ResetNodes();
         }        
-
-		/// <summary>
-		/// Recursively travel the tree to find Result.Running.
-		/// </summary>
-		/// <param name="response">The response from the tree. Null if nothing found.</param>
-		/// <returns>True if runnable response found, false if not.</returns>
-		internal bool Evaluate(out TreeResponse response)
-        {
-			if (debugTree) { Debug.Log(gameObject.name + " evaluating tree..."); }
 		
-            // Recursively travel the tree toward first waiting result.
-            response = Tree.Root.Response;
-
-            if (response.Result != Result.Running || response.Origin == null) 
+		public void TriggerInterrupt(string interruptId, ITreeContext context)
+		{
+			if (Tree.TryInterrupt(interruptId, context))
 			{
-				if (debugTree) { Debug.Log($"{gameObject.name} received {response.Result} from {response.Origin}"); }
-                return false;
+				if (debugTree) { Debug.Log($"{name} was interrupted with Id {interruptId}"); }
+
+				if (current.Origin != null)
+				{
+					current.Origin.Fail();
+					current = null;
+                }
+				else
+				{
+					// TODO: See if this is even necessary.
+					current.Result = Result.Failure;
+				}
 			}
+		}
 
-            if (debugTree) { DebugResult(response); }
-
-			return true;
-        }
-		
 		/// <summary>
 		/// Tries to add a new context key/value pair.
 		/// </summary>
@@ -159,13 +153,5 @@ namespace BTree
 		{
 			return this.context.Remove(key);
 		}
-
-        private void DebugResult(TreeResponse result)
-        {
-            if (result?.Origin != null)
-            {
-                Debug.Log($"{gameObject.name} SceneTree result: {result.Result} from {result.Origin}");
-            }
-        }
     }
 }
