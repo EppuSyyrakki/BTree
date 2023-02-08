@@ -26,7 +26,7 @@ public class MoveToSpace : Leaf<NoContext>
         Transform goal = GetGoalTransform(player);
         Vector3 towards = (goal.position - player.transform.position).normalized * multiplier * 0.5f;
         random.y = 0;
-        target = player.MoveTo(player.Start + random + towards);
+        target = player.MoveTo(player.StartPos + random + towards);
     }
 
     public override void Execute()

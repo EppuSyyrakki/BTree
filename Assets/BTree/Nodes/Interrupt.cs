@@ -25,7 +25,7 @@ namespace BTree
         internal string OutContext => outContext;
         internal bool OverwriteOut => overwriteOut;
 
-        internal TreeResponse Response => GetChildResponse();            
+        internal TreeResponse Response => GetChildResponse();
 
         public override object GetValue(NodePort port)
         {

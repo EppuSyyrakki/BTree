@@ -1,5 +1,4 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using XNode;
 
 namespace BTree
@@ -18,28 +17,10 @@ namespace BTree
 
         public Root Root { get; private set; }
 
-        internal bool TryInterrupt(string interruptId, ITreeContext context)
+        internal bool TryInterrupt(string interruptId, ITreeContext context, out Interrupt interruption)
         {
             isInterrupted = Root.GetInterrupt(interruptId, out interruption);
-
-            if (!string.IsNullOrEmpty(interruption.OutContext))
-            {
-                if (context == null)
-                {
-                    if (agent.debugTree)
-                    {
-                        Debug.LogWarning($"{agent}.{this} outContext {interruption.OutContext} not set.");
-                    }
-                }
-                else if (!agent.TryAddContext(interruption.OutContext, context, interruption.OverwriteOut))
-                {
-                    if (agent.debugTree)
-                    {
-                        Debug.LogWarning($"{agent}.{this} outContext {interruption.OutContext} already exists.");
-                    }
-                }
-            }
-
+            this.interruption = interruption;
             return isInterrupted;
         }
 
@@ -55,15 +36,17 @@ namespace BTree
                 ResetNodes(); 
             }
 
-            if (agent.debugTree) { Debug.Log(agent + " evaluating tree..."); }
-
             if (isInterrupted)
             {
+                if (agent.debugTree) { Debug.Log(agent + " has been interrupted with " + interruption.Id); }
+
                 isInterrupted = false;
                 forcedReset = interruption.ForceReset;
                 response = interruption.Response;                
                 return true;
             }
+
+            if (agent.debugTree) { Debug.Log(agent + " evaluating tree..."); }
 
             // Recursively travel the tree toward first waiting result.
             response = Root.Response;
@@ -105,7 +88,7 @@ namespace BTree
         {
             if (result?.Origin != null)
             {
-                Debug.Log($"{agent} SceneTree result: {result.Result} from {result.Origin}");
+                Debug.Log($"{agent} Tree result: {result.Result} from {result.Origin}");
             }
         }
     }

@@ -8,7 +8,7 @@ namespace BTree
 	/// </summary>
 	public class TreeAgent : MonoBehaviour, ITreeContext
 	{
-        [SerializeField, Tooltip("Reference to a TreeAsset ScriptableObject")]
+        [SerializeField, Tooltip("Reference to a TreeAsset ScriptableObject. Will get copied to a property on Awake.")]
         private TreeAsset treeAsset;
 
 		protected Dictionary<string, ITreeContext> context;
@@ -32,14 +32,14 @@ namespace BTree
             }
 		}
 
+		protected virtual void Start()
+		{
+            Tree.Evaluate(out current);
+            current.Origin.Enter();
+        }
+
         protected virtual void Update()
         {
-			if (current == null)
-            {
-                Tree.Evaluate(out current);
-                current.Origin.Enter();
-            }
-
             if (current.CheckConditions())
             {
                 current.Origin.Execute();
@@ -57,7 +57,8 @@ namespace BTree
 			else
 			{
                 Restart();
-                current = null;
+				Tree.Evaluate(out current);
+				current.Origin.Enter();
             }
         }
 
@@ -72,21 +73,39 @@ namespace BTree
 		
 		public void TriggerInterrupt(string interruptId, ITreeContext context)
 		{
-			if (Tree.TryInterrupt(interruptId, context))
-			{
-				if (debugTree) { Debug.Log($"{name} was interrupted with Id {interruptId}"); }
+			if (!Tree.TryInterrupt(interruptId, context, out Interrupt interruption)) { return; }
+			
+			if (debugTree) { Debug.Log($"{name} was interrupted with Id {interruptId}"); }
 
-				if (current.Origin != null)
-				{
-					current.Origin.Fail();
-					current = null;
+            if (!string.IsNullOrEmpty(interruption.OutContext))
+            {
+                if (context == null)
+                {
+                    if (debugTree)
+                    {
+                        Debug.LogWarning($"{name}.{interruption} outContext {interruption.OutContext} not set.");
+                    }
                 }
-				else
-				{
-					// TODO: See if this is even necessary.
-					current.Result = Result.Failure;
-				}
-			}
+                else if (TryAddContext(interruption.OutContext, context, interruption.OverwriteOut))
+                {
+                    if (debugTree)
+                    {
+                        Debug.LogWarning($"{name}.{interruption} outContext {interruption.OutContext} already exists.");
+                    }
+                }
+            }
+
+            if (current.Origin != null)
+			{
+				current.Origin.Fail();
+				Tree.Evaluate(out current);
+				current.Origin.Enter();
+            }
+			else
+			{
+				// TODO: See if this is even necessary.
+				current.Result = Result.Failure;
+			}			
 		}
 
 		/// <summary>

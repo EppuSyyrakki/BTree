@@ -126,11 +126,13 @@ namespace BTree
                     }                   
                 }                
             }
+
+            
         }
 
         /// <summary>
-        /// Called by the base class before setting the context to the tree with the Out Context key, so any
-        /// required context can be set inside this method.
+        /// Called by the base class after setting the context to the tree with the Out Context key, so any Out Context
+        /// should be set before this method. This enables any triggers 
         /// </summary>
         protected abstract void OnExit();
 
@@ -152,6 +154,7 @@ namespace BTree
         {
             Response.Result = Result.Failure;           
             context = null;
+            Exit();
             OnFail();
         }
 

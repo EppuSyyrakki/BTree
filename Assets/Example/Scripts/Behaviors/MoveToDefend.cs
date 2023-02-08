@@ -18,7 +18,7 @@ public class MoveToDefend : Leaf<NoContext>
     protected override void OnEnter()
     {      
         var pos = GetLocation();
-        target = player.MoveTo(pos);
+        target = player.MoveTo(pos);       
         timer = 0;
     }
 
@@ -34,24 +34,25 @@ public class MoveToDefend : Leaf<NoContext>
 
         if ((target - defensePos).magnitude > 1f)
         {
-            target = player.MoveTo(defensePos);
             player.IsDefending = false;
+            target = player.MoveTo(defensePos);
             return;
         }
 
-        if ((defensePos - player.transform.position).magnitude < 1f)
-        {
-            player.IsDefending = true;
-            timer += Time.deltaTime;
+        player.IsDefending = true;
+        timer += Time.deltaTime;
 
-            if (timer > maxDuration)
-            {
-                Response.Result = Result.Success;
-                player.IsDefending = false;
-            }
-        }
+        if (timer > maxDuration)
+        {
+            Response.Result = Result.Success;
+            player.IsDefending = false;
+        }        
     }
-    protected override void OnExit() { }
+
+    protected override void OnExit() 
+    {
+        player.IsDefending = false;
+    }
 
     private Vector3 GetLocation()
     {
