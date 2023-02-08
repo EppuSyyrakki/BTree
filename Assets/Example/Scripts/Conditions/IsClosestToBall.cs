@@ -26,7 +26,7 @@ namespace Conditions
         {
             if (player.Ball == null) { return false; }
 
-            Vector3 ball = player.Ball.transform.position;
+            Vector3 ball = player.Ball.Position;
             float self = (player.transform.position - ball).sqrMagnitude;
             float closest = float.MaxValue;
 

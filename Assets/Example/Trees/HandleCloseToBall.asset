@@ -1,39 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8787733917675388832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0036581d223871441bc57c5497e3053f, type: 3}
-  m_Name: Idle
-  m_EditorClassIdentifier: 
-  graph: {fileID: 11400000}
-  position: {x: -1448, y: 104}
-  ports:
-    keys:
-    - output
-    values:
-    - _fieldName: output
-      _node: {fileID: -8787733917675388832}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections:
-      - fieldName: input 3
-        node: {fileID: 3047129182384201490}
-        reroutePoints: []
-      _direction: 1
-      _connectionType: 1
-      _typeConstraint: 0
-      _dynamic: 0
-  maxDuration: 0.25
-  inContext: 
-  outContext: 
-  overwriteOut: 1
 --- !u!114 &-5351374921706567882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +67,6 @@ MonoBehaviour:
   - {fileID: 3047129182384201490}
   - {fileID: 538267512350864690}
   - {fileID: 5108141674240960780}
-  - {fileID: -8787733917675388832}
   - {fileID: 6702865750709678192}
   - {fileID: 3862937773836023354}
   - {fileID: -5351374921706567882}
@@ -118,7 +83,7 @@ MonoBehaviour:
   m_Name: Find Target
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1448, y: -248}
+  position: {x: -1016, y: 56}
   ports:
     keys:
     - output
@@ -152,7 +117,7 @@ MonoBehaviour:
   m_Name: Sequence
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -776, y: -40}
+  position: {x: -664, y: 8}
   ports:
     keys:
     - input
@@ -160,7 +125,6 @@ MonoBehaviour:
     - input 0
     - input 1
     - input 2
-    - input 3
     values:
     - _fieldName: input
       _node: {fileID: 3047129182384201490}
@@ -219,18 +183,6 @@ MonoBehaviour:
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 1
-    - _fieldName: input 3
-      _node: {fileID: 3047129182384201490}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections:
-      - fieldName: output
-        node: {fileID: -8787733917675388832}
-        reroutePoints: []
-      _direction: 0
-      _connectionType: 1
-      _typeConstraint: 0
-      _dynamic: 1
   haltOnFailure: 1
 --- !u!114 &3862937773836023354
 MonoBehaviour:
@@ -245,7 +197,7 @@ MonoBehaviour:
   m_Name: While
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -392, y: -104}
+  position: {x: -328, y: -56}
   ports:
     keys:
     - conditions
@@ -311,7 +263,7 @@ MonoBehaviour:
   m_Name: Shoot Or Pass
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1448, y: -88}
+  position: {x: -1016, y: 216}
   ports:
     keys:
     - output
@@ -332,8 +284,8 @@ MonoBehaviour:
   inContext: target
   outContext: 
   overwriteOut: 1
-  shotPower: 10
-  passPower: 5
+  shotPower: 6
+  passPower: 4
 --- !u!114 &6702865750709678192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,7 +299,7 @@ MonoBehaviour:
   m_Name: Is Closest To Ball
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -776, y: -168}
+  position: {x: -664, y: -120}
   ports:
     keys:
     - output
@@ -378,7 +330,7 @@ MonoBehaviour:
   m_Name: Move To Ball
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1448, y: -408}
+  position: {x: -1016, y: -104}
   ports:
     keys:
     - output

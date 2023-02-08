@@ -1,10 +1,18 @@
-﻿using UnityEngine;
-using BTree;
-using System.Collections.Generic;
+﻿using BTree;
+using UnityEngine;
 
 public class Ball : MonoBehaviour, ITreeContext
 {
     public bool Scored = false;
+
+    public Vector3 Position
+    {
+        get 
+        {
+            var p = transform.position;
+            return new Vector3(p.x, p.y > 1f ? 0.5f : 0, p.z);
+        }        
+    }
 
     public bool IsCloseTo(Player.Team team, float distance = 2f, Player except = null)
     {

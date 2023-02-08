@@ -24,7 +24,7 @@ public class MoveToContext : Leaf<Ball>
 
     public override void Execute()
     {
-        if (Context == null || Context.gameObject == null)
+        if (Context == null)
         {
             Response.Result = Result.Failure;
             return;

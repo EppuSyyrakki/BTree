@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BTree;
-using System;
 using TMPro;
 
 public class Goal : MonoBehaviour, ITreeContext
@@ -19,6 +18,15 @@ public class Goal : MonoBehaviour, ITreeContext
     private Light goalLight;
     private BallSpawner spawner = null;
     private int scoredToThis = 0;
+
+    public Vector3 Position
+    {
+        get
+        {
+            var p = transform.position;
+            return new Vector3(p.x, 0, p.z);
+        }
+    }
 
     private void Awake()
     {

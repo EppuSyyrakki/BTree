@@ -3,11 +3,11 @@ using XNode;
 
 namespace BTree
 {
-	/// <summary>
-	/// Represents an actionable node that requires a context in the tree graph. Inherit any classes that make 
-	/// the agent do something from this class.
-	/// </summary>
-	[NodeTint(0.15f, 0.175f, 0.15f)]
+    /// <summary>
+    /// Represents an actionable node that requires a context in the tree graph. Inherit any classes that make 
+    /// the agent do something from this class.
+    /// </summary>
+    [NodeTint(0.15f, 0.175f, 0.15f)]
 	public abstract class Leaf<T> : TreeNode, ILeaf where T : class, ITreeContext
     {
         [SerializeField, Tooltip("Negative value means indefinite.")]
@@ -23,23 +23,9 @@ namespace BTree
 		private bool overwriteOut = true;
 
         private float elapsed = 0;		
-		private T context;
 
         public TreeResponse Response { get; set; }
-        protected T Context
-        {
-            get
-            {
-                if (context is NoContext)
-                {
-                    Debug.LogError($"{Agent}.{this} trying to use context while having NoContext type");
-                    return null;
-                }
-
-                return context;
-            }
-            set => context = value;
-        }
+        protected T Context { get; set; }
 
         protected sealed override void Setup(TreeAgent agent)
         {
@@ -63,7 +49,7 @@ namespace BTree
             {
                 if (Agent.TryGetContext(inContext, out ITreeContext context))
                 {
-                    this.context = context as T;
+                    this.Context = context as T;
                 }
                 else
                 {
@@ -108,7 +94,7 @@ namespace BTree
 
             if (!string.IsNullOrEmpty(outContext)) 
             {
-                if (context == null)
+                if (Context == null)
                 {
                     if (Agent.debugTree)
                     {
@@ -118,16 +104,14 @@ namespace BTree
                     return;
                 }
 
-                if (!Agent.TryAddContext(outContext, context, overwriteOut))
+                if (!Agent.TryAddContext(outContext, Context, overwriteOut))
                 {
                     if (Agent.debugTree)
                     {
                         Debug.LogWarning($"{Agent}.{this} outContext {outContext} already exists.");
                     }                   
                 }                
-            }
-
-            
+            } 
         }
 
         /// <summary>
@@ -139,7 +123,7 @@ namespace BTree
         internal sealed override void ResetNode()
 		{
             Response.Result = Result.Running;
-            context = null;
+            Context = null;
             elapsed = 0;
             OnReset();
 		}
@@ -153,7 +137,7 @@ namespace BTree
         public void Fail()
         {
             Response.Result = Result.Failure;           
-            context = null;
+            Context = null;
             Exit();
             OnFail();
         }

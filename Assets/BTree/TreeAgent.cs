@@ -7,7 +7,7 @@ namespace BTree
 	/// An instantiated version of the TreeAsset graph that can be used and referenced in scenes at runtime.
 	/// </summary>
 	public class TreeAgent : MonoBehaviour, ITreeContext
-	{
+    {
         [SerializeField, Tooltip("Reference to a TreeAsset ScriptableObject. Will get copied to a property on Awake.")]
         private TreeAsset treeAsset;
 
@@ -17,7 +17,16 @@ namespace BTree
 		public TreeAsset Tree { get; protected set; }
         public bool debugTree = false;
 
-		protected virtual void Awake()
+        public Vector3 Position
+        {
+            get
+            {
+                var p = transform.position;
+                return new Vector3(p.x, 0, p.z);
+            }
+        }
+
+        protected virtual void Awake()
 		{
             if (treeAsset == null)
 			{

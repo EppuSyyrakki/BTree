@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MoveToSpace : Leaf<NoContext>
+public class MoveToSpace : Leaf<ITreeContext>
 {
     [SerializeField]
     private float multiplier = 4f;
@@ -55,8 +55,9 @@ public class MoveToSpace : Leaf<NoContext>
 
     private Transform GetGoalTransform(Player player)
     {
-        if ((player.OwnGoal.transform.position - player.transform.position).sqrMagnitude > 
-            (player.OpponentGoal.transform.position - player.transform.position).sqrMagnitude)
+        if ((player.OwnGoal.Position - player.Ball.Position).sqrMagnitude > 
+            (player.OpponentGoal.Position - player.Ball.Position).sqrMagnitude
+            && Random.Range(0, 2.5f) > player.AttackWeight)
         {
             return player.OwnGoal.transform;
         }

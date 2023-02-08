@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Example of using the Out Context field on the node.
 /// </summary>
-public class MoveToBall : Leaf<NoContext>
+public class MoveToBall : Leaf<ITreeContext>
 {
     private Player player;
     private Vector3 target;
@@ -29,15 +29,14 @@ public class MoveToBall : Leaf<NoContext>
             return;
         }
 
-        if ((target - player.Ball.transform.position).sqrMagnitude > 2f)
+        if ((target - player.Ball.Position).sqrMagnitude > 2f)
         {
             var pos = GetLocation();
             target = player.MoveTo(pos);
-            return;
         }
 
-        if ((player.transform.position - player.Ball.transform.position).sqrMagnitude < 2f)
-        {           
+        if ((player.transform.position - player.Ball.Position).sqrMagnitude < 3f)
+        {
             Response.Result = Result.Success;
             return;
         }
@@ -52,8 +51,8 @@ public class MoveToBall : Leaf<NoContext>
 
     private Vector3 GetLocation()
     {
-        var goalToBall = player.Ball.transform.position - player.OpponentGoal.transform.position;
-        var behindBall = player.Ball.transform.position + (goalToBall.normalized * 0.75f);
+        var goalToBall = player.Ball.Position - player.OpponentGoal.Position;
+        var behindBall = player.Ball.Position + (goalToBall.normalized * 0.75f);
 
         return behindBall;
     }

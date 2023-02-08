@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Example of using the In Context to fetch a generic context from the tree through only the ITreeContext 
+/// Example of using the In Context to fetch a generic context from the tree through only the MonoBehaviour 
 /// interface, handling a null context, and triggering an interrupt in another TreeAgent.
 /// </summary>
 public class ShootOrPass : Leaf<ITreeContext>
@@ -38,9 +38,9 @@ public class ShootOrPass : Leaf<ITreeContext>
         }
 
         float power = isGoal ? shotPower : passPower;
-        Vector3 dir = (Context.transform.position - rb.position).normalized;
+        Vector3 dir = (Context.Position - rb.position).normalized;
 
-        Vector3 lead = isGoal ? Vector3.zero : Context.transform.forward;
+        Vector3 lead = isGoal ? Random.insideUnitSphere  * 2f: Context.gameObject.transform.forward * 2f;
         Debug.DrawLine(Agent.transform.position, Agent.transform.position + dir, Color.blue, 2f);
         rb.AddForce(dir * power + Vector3.up + lead, ForceMode.Impulse);
         Response.Result = Result.Success;
@@ -61,10 +61,10 @@ public class ShootOrPass : Leaf<ITreeContext>
     private void Lob()
     {
         var player = Agent as Player;
-        Vector3 away = (player.Ball.transform.position - player.transform.position).normalized;
-        Vector3 toGoal = (player.OpponentGoal.transform.position - player.Ball.transform.position).normalized;
+        Vector3 away = (player.Ball.Position - player.transform.position).normalized;
+        Vector3 toGoal = (player.OpponentGoal.Position - player.Ball.Position).normalized;
         var rb = player.Ball.GetComponent<Rigidbody>();
-        Vector3 force = (away + toGoal) * passPower * 0.5f + Vector3.up * 2f;
+        Vector3 force = (away + toGoal) * passPower * 0.5f + Vector3.up;
         rb.AddForce(force, ForceMode.Impulse);
         Response.Result = Result.Success;
     }

@@ -17,7 +17,7 @@ namespace Conditions
 
             var player = Agent as Player;
 
-            if (Vector3.Distance(player.Ball.transform.position, player.transform.position) < distance)
+            if (Vector3.Distance(player.Ball.Position, player.transform.position) < distance)
             {
                 return true;
             }

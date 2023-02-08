@@ -1,10 +1,7 @@
 ﻿using BTree;
 using UnityEngine;
 
-/// <summary>
-/// Example of using the Out Context field on the node.
-/// </summary>
-public class MoveToDefend : Leaf<NoContext>
+public class MoveToDefend : Leaf<ITreeContext>
 {
     private Player player;
     private Vector3 target;
@@ -56,7 +53,7 @@ public class MoveToDefend : Leaf<NoContext>
 
     private Vector3 GetLocation()
     {
-        Vector3 goalToBall = player.Ball.transform.position - player.OwnGoal.transform.position;
+        Vector3 goalToBall = player.Ball.Position - player.OwnGoal.Position;
         Vector3 offset;
 
         if (goalToBall.magnitude > player.DefensiveRange)
@@ -67,7 +64,7 @@ public class MoveToDefend : Leaf<NoContext>
         {
             offset = goalToBall * player.DefensiveRange * 0.1f;
         }
-        return player.OwnGoal.transform.position + offset;
+        return player.OwnGoal.Position + offset;
     }
 
     protected override void OnReset()
