@@ -21,7 +21,7 @@ public class MoveToBall : Leaf<ITreeContext>
         player.MovingToBall = true;
     }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
         if (player.Ball == null)
         {
@@ -38,10 +38,7 @@ public class MoveToBall : Leaf<ITreeContext>
         if ((player.transform.position - player.Ball.Position).sqrMagnitude < 3f)
         {
             Response.Result = Result.Success;
-            return;
         }
-
-        base.Execute();
     }
 
     protected override void OnExit()

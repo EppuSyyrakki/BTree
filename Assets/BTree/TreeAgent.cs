@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BTree
@@ -8,12 +9,15 @@ namespace BTree
 	/// </summary>
 	public class TreeAgent : MonoBehaviour, ITreeContext
     {
+		[SerializeField]
+        public TreeLogger treeLogger;
+
         [SerializeField, Tooltip("Reference to a TreeAsset ScriptableObject. Will get copied to a property on Awake.")]
         private TreeAsset treeAsset;
 
 		protected Dictionary<string, ITreeContext> context;
         protected TreeResponse current;
-		
+
 		public TreeAsset Tree { get; protected set; }
         public bool debugTree = false;
 
@@ -43,8 +47,15 @@ namespace BTree
 
 		protected virtual void Start()
 		{
-            Tree.Evaluate(out current);
-            current.Origin.Enter();
+            if (Tree.Evaluate(out current))
+            {
+                current.Origin.OnExceptionFail += TryEvaluate;
+                current.Origin.Enter();
+            }
+            else
+            {
+                Debug.LogError(name + " failed to find a runnable Leaf in its Tree.");
+            }
         }
 
         protected virtual void Update()
@@ -58,28 +69,52 @@ namespace BTree
 
 			current.Origin.Exit();
 
-            if (Tree.Evaluate(out TreeResponse next))
+            if (!TryEvaluate())
             {
-                next.Origin.Enter();
-                current = next;
-            }
-			else
-			{
-                Restart();
-				Tree.Evaluate(out current);
-				current.Origin.Enter();
+				Restart();
+                TryEvaluate();
             }
         }
 
-		/// <summary>
-		/// Resets all nodes and clears the context dictionary. Used when the agent can't find any Running results.
-		/// </summary>
+        /// <summary>
+        /// Unsubscribes from the current leaf's exception failure Action. Evaluates the tree and subscribes to 
+        /// the new leaf's exception failure. Calls Enter() on the new leaf and sets it as current.
+        /// </summary>
+        protected bool TryEvaluate()
+        {
+            if (Tree.Evaluate(out TreeResponse next))
+            {
+				if (current != null)
+				{
+					current.Origin.OnExceptionFail -= TryEvaluate;
+				}
+				
+                next.Origin.OnExceptionFail += TryEvaluate;				
+                next.Origin.Enter();
+                current = next;
+                return true;
+            }
+            else
+            {
+				Restart();
+				return TryEvaluate();
+            }
+        }
+
+        /// <summary>
+        /// Resets all nodes and clears the context dictionary. Used when the agent can't find any Running results.
+        /// </summary>
         protected void Restart()
         {
 			context.Clear();
 			Tree.ResetNodes();
-        }        
+        }
 		
+		/// <summary>
+		/// Tries to trigger an interrupt node from this TreeAgent's Tree. 
+		/// </summary>
+		/// <param name="interruptId"></param>
+		/// <param name="context"></param>
 		public void TriggerInterrupt(string interruptId, ITreeContext context)
 		{
 			if (!Tree.TryInterrupt(interruptId, context, out Interrupt interruption)) { return; }

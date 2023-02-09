@@ -19,7 +19,7 @@ public class MoveToDefend : Leaf<ITreeContext>
         timer = 0;
     }
 
-    public override void Execute()
+    protected override void OnExecute()
     {     
         if (player.Ball == null)
         {

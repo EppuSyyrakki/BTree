@@ -29,16 +29,12 @@ public class MoveToSpace : Leaf<ITreeContext>
         target = player.MoveTo(player.StartPos + random + towards);
     }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
-        if ((Agent.transform.position - target).sqrMagnitude < 1.5f)
+        if ((Agent.transform.position - target).sqrMagnitude < 1f)
         {
             Response.Result = Result.Success;
         }
-        else
-        {
-            base.Execute();
-        }   
     }
 
     protected override void OnExit()

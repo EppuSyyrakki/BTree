@@ -1,3 +1,5 @@
+using System;
+
 namespace BTree
 {
     /// <summary>
@@ -14,5 +16,6 @@ namespace BTree
         void Exit();
         TreeResponse Response { get; }
         void Fail();
+        event Func<bool> OnExceptionFail;
     }
 }

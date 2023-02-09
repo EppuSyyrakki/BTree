@@ -12,7 +12,7 @@ public class FindTarget : Leaf<ITreeContext>
 
     protected override void OnEnter() { }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
         var dist = Vector3.Distance(player.Ball.Position, player.Position);
 
@@ -32,6 +32,10 @@ public class FindTarget : Leaf<ITreeContext>
             Context = FindTeamMate();
             var color = player.Side == Player.Team.Blue ? Color.blue : Color.red;
             Debug.DrawLine(player.Position, Context.Position, color, 2f);
+        }
+        else
+        {
+            Response.Result = Result.Failure;
         }
         
         Response.Result = Result.Success;

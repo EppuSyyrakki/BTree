@@ -22,14 +22,8 @@ public class MoveToContext : Leaf<Ball>
         target = player.MoveTo(GetTarget());
     }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
-        if (Context == null)
-        {
-            Response.Result = Result.Failure;
-            return;
-        }
-
         var newTarget = GetTarget();
 
         if ((newTarget - target).sqrMagnitude > 25f)
@@ -42,8 +36,6 @@ public class MoveToContext : Leaf<Ball>
         {
             Response.Result = Result.Success;
         }
-
-        base.Execute();
     }
 
     protected override void OnExit() { }

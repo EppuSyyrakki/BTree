@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using XNode;
 
 namespace BTree
@@ -22,10 +23,29 @@ namespace BTree
 		[SerializeField, Tooltip("If the Out Context already exists, overwrite it.")]
 		private bool overwriteOut = true;
 
-        private float elapsed = 0;		
+        [SerializeField, Tooltip("Fail if In Context is set to null")]
+        private bool failNullCtx = false;
+
+        private float elapsed = 0;
+        private T context;
 
         public TreeResponse Response { get; set; }
-        protected T Context { get; set; }
+
+        public event Func<bool> OnExceptionFail;
+
+        protected T Context 
+        { 
+            get 
+            { 
+                if (context == null) { throw new ContextNullException("Context possibly destroyed while running " + this); }
+                return context;
+            }
+            set
+            {
+                if (failNullCtx && value == null) { throw new ContextNullException(this + " received a null Context"); }
+                context = value;
+            } 
+        }
 
         protected sealed override void Setup(TreeAgent agent)
         {
@@ -42,42 +62,39 @@ namespace BTree
 
 		public void Enter()
 		{
-            elapsed = 0;
-            Response.Result = Result.Running;
-
-            if (!string.IsNullOrEmpty(inContext))
+            try
             {
-                if (Agent.TryGetContext(inContext, out ITreeContext context))
+                if (!string.IsNullOrEmpty(inContext) && Agent.TryGetContext(inContext, out ITreeContext context))
                 {
-                    this.Context = context as T;
+                    Context = context as T;
                 }
-                else
-                {
-                    if (Agent.debugTree)
-                    {
-                        Debug.LogWarning($"{Agent}.{this} could not find inContext {inContext}.");
-                    }
 
-                    Response.Result = Result.Failure;
-                }
+                OnEnter();
             }
-
-			OnEnter();
+            catch (ContextNullException)
+            {
+                ExceptionFailure();
+            }
         }
 
         /// <summary>
-        /// Called by the base class after getting the context from the tree with the In Context key, so the context
-        /// can be used here.
+        /// Called by the base class when entering this node, after getting any In Context from the tree with the 
+        /// so the context can be used inside this method.
         /// </summary>
 		protected abstract void OnEnter();
 
-        /// <summary>
-        /// Override this to create actionable nodes that get sent to the agent after the tree is evaluated and the path
-        /// to this node returns a Result.Running within its TreeResponse. Base implementation only advances the timer 
-        /// and fails if it is > maxDuration.
-        /// </summary>
-        public virtual void Execute()
+        public void Execute()
         {
+            try
+            {
+                OnExecute();
+            }
+            catch (ContextNullException)
+            {
+                ExceptionFailure();
+                return;
+            }
+
             if (maxDuration < 0) { return; }
 
             elapsed += Time.deltaTime;
@@ -88,42 +105,39 @@ namespace BTree
             }
         }
 
+        /// <summary>
+        /// Called by the base class when getting an Execute() call from the Agent. This method is called first, 
+        /// then a max duration timer advanced in the base class if set to > 0 on the node.
+        /// </summary>
+        protected abstract void OnExecute();
+
         public void Exit()
 		{
-            OnExit();
-
-            if (!string.IsNullOrEmpty(outContext)) 
+            try
             {
-                if (Context == null)
-                {
-                    if (Agent.debugTree)
-                    {
-                        Debug.LogWarning($"{Agent}.{this} outContext {outContext} not set.");
-                    }
-                    
-                    return;
-                }
+                OnExit();
 
-                if (!Agent.TryAddContext(outContext, Context, overwriteOut))
+                if (!string.IsNullOrEmpty(outContext) && !Agent.TryAddContext(outContext, Context, overwriteOut))
                 {
-                    if (Agent.debugTree)
-                    {
-                        Debug.LogWarning($"{Agent}.{this} outContext {outContext} already exists.");
-                    }                   
-                }                
-            } 
+                    Debug.LogWarning($"{Agent}.{this} outContext {outContext} already exists.");
+                }
+            }
+            catch (ContextNullException)
+            {
+                ExceptionFailure();
+            }
         }
 
         /// <summary>
-        /// Called by the base class after setting the context to the tree with the Out Context key, so any Out Context
-        /// should be set before this method. This enables any triggers 
+        /// Called after the last OnExecute call by the base class, before adding Out Context to the tree - so the
+        /// Context can be set inside this method.
         /// </summary>
         protected abstract void OnExit();
 
         internal sealed override void ResetNode()
 		{
             Response.Result = Result.Running;
-            Context = null;
+            context = null;
             elapsed = 0;
             OnReset();
 		}
@@ -134,17 +148,30 @@ namespace BTree
         /// </summary>
         protected abstract void OnReset();
 
+        /// <summary>
+        /// Forces the Response.Result to Failure. Does NOT halt execution - if called from outside, Enter, Execute 
+        /// and Exit might still run (and fail through exception, which will trigger the tree to be evaluated immediately).
+        /// </summary>
         public void Fail()
         {
-            Response.Result = Result.Failure;           
-            Context = null;
-            Exit();
+            Response.Result = Result.Failure;
             OnFail();
+        }
+
+        private void ExceptionFailure()
+        {
+            Response.Result = Result.Failure;
+            bool handled = OnExceptionFail.Invoke();
+
+            if (handled)
+            {
+                Debug.LogWarning($"{Agent}.{this} exception failure handled successfully.");
+            }
         }
 
         /// <summary>
         /// Called after the base class receives a Fail() call. Base class handles failing Response and nulling
-        /// context.
+        /// context. Will NOT be called if execution encounters a null Context exception.
         /// </summary>
         protected abstract void OnFail();
 		

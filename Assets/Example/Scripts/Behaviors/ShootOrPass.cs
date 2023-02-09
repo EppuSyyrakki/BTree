@@ -22,12 +22,6 @@ public class ShootOrPass : Leaf<ITreeContext>
 
     protected override void OnEnter()
     {
-        if (Context == null)
-        {
-            Lob();
-            return;
-        }
-
         bool isGoal = Context is Goal;
         var rb = player.Ball.GetComponent<Rigidbody>();
 
@@ -45,6 +39,8 @@ public class ShootOrPass : Leaf<ITreeContext>
         rb.AddForce(dir * power + Vector3.up + lead, ForceMode.Impulse);
         Response.Result = Result.Success;
     }
+
+    protected override void OnExecute() { }
 
     protected override void OnExit() 
     { 

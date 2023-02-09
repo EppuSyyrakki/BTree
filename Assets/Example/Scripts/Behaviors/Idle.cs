@@ -9,7 +9,7 @@ public class Idle : Leaf<ITreeContext>
 
     protected override void OnEnter() { }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
         idleTime += Time.deltaTime;
 
