@@ -8,7 +8,7 @@ namespace BTree
 	/// Loops through child nodes. If any child fails, returns failure. Returns success after all nodes
 	/// succeeded and has repeated given times.
 	/// </summary>
-	public class Sequence : TreeNode
+	public class Sequence : Branch
 	{
 		[SerializeField]
 		private bool haltOnFailure = true;
@@ -18,7 +18,6 @@ namespace BTree
 
 		private int index;
 		private bool HasNextChild => index + 1 < children.Length;
-		private TreeResponse storedResponse = null;
 
 		internal override void ResetNode()
 		{
@@ -31,12 +30,10 @@ namespace BTree
 			if (storedResponse != null) { return storedResponse; }
 
 			index = 0;
- 			var response = GetChildResponseAtIndex(index);
-
-			if (response == null) { return null; }
-
-			return Resolve(response);
-		}
+			var response = GetChildResponseAtIndex(index);
+			var resolved = Resolve(response);
+			return ResolveConditions(resolved);
+        }
 
 		private TreeResponse Resolve(TreeResponse response)
 		{
@@ -61,9 +58,7 @@ namespace BTree
 				response.Result = Result.Success;
 			}
 
-			// Store the response and send it.
-			storedResponse = response;
-			return storedResponse;
+			return response;
 		}
 	}
 }

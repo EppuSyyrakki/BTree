@@ -6,13 +6,13 @@ namespace BTree
 	/// <summary>
 	/// Repeats a single child a given number of times. If the child returns failure at any point, returns failure.
 	/// </summary>
-	public class Repeater : TreeNode
+	public class Repeater : Branch
 	{
         [SerializeField, Input(dynamicPortList: false, connectionType: ConnectionType.Override)]
         protected TreeResponse input;
 
-        [SerializeField, Tooltip("0 <= repeats indefinitely")]
-		private int repeat;
+        [SerializeField, Tooltip("0 < repeats indefinitely")]
+		private int repeat = 0;
 
 		private int _counter;
 
@@ -25,24 +25,17 @@ namespace BTree
 		{
 			var response = GetChildResponse();
 
-			if (response == null)
-			{
-				Debug.LogWarning(GetType() + " received a null value");
-				return null;
-			}
-
 			if (response.Result != Result.Running)
 			{
-				if (repeat <= 0 || _counter < repeat)
+				if (repeat < 0 || _counter < repeat)
 				{
 					_counter++;
 					response.Result = Result.Running;
 					RecursiveResetChildren();
-					return response;
 				}
 			}
 
-			return response;
+			return ResolveConditions(response);
 		}
 	}
 }

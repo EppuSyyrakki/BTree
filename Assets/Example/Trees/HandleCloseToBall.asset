@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Root (HandleCloseToBall)
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -24, y: -88}
+  position: {x: 88, y: -88}
   ports:
     keys:
     - interruptions
@@ -35,7 +35,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: output
-        node: {fileID: 3862937773836023354}
+        node: {fileID: 3047129182384201490}
         reroutePoints: []
       _direction: 0
       _connectionType: 1
@@ -68,7 +68,6 @@ MonoBehaviour:
   - {fileID: 538267512350864690}
   - {fileID: 5108141674240960780}
   - {fileID: 6702865750709678192}
-  - {fileID: 3862937773836023354}
   - {fileID: -5351374921706567882}
 --- !u!114 &538267512350864690
 MonoBehaviour:
@@ -83,7 +82,7 @@ MonoBehaviour:
   m_Name: Find Target
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1016, y: 56}
+  position: {x: -808, y: 56}
   ports:
     keys:
     - output
@@ -104,6 +103,7 @@ MonoBehaviour:
   inContext: 
   outContext: target
   overwriteOut: 1
+  failNullCtx: 0
 --- !u!114 &3047129182384201490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Name: Sequence
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -664, y: 8}
+  position: {x: -264, y: -24}
   ports:
     keys:
     - input
@@ -125,6 +125,8 @@ MonoBehaviour:
     - input 0
     - input 1
     - input 2
+    - conditions
+    - conditions 0
     values:
     - _fieldName: input
       _node: {fileID: 3047129182384201490}
@@ -141,7 +143,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: input
-        node: {fileID: 3862937773836023354}
+        node: {fileID: -5351374921706567882}
         reroutePoints: []
       _direction: 1
       _connectionType: 1
@@ -178,6 +180,27 @@ MonoBehaviour:
       connections:
       - fieldName: output
         node: {fileID: 5108141674240960780}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: conditions
+      _node: {fileID: 3047129182384201490}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: conditions 0
+      _node: {fileID: 3047129182384201490}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 6702865750709678192}
         reroutePoints: []
       _direction: 0
       _connectionType: 1
@@ -250,6 +273,22 @@ MonoBehaviour:
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 1
+  output:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
+  children: []
+  initialized: 0
+  <Agent>k__BackingField: {fileID: 0}
+  conditions:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
+  input:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
+  conditionNodes: []
+  storedResponse:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
 --- !u!114 &5108141674240960780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,7 +302,7 @@ MonoBehaviour:
   m_Name: Shoot Or Pass
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1016, y: 216}
+  position: {x: -808, y: 232}
   ports:
     keys:
     - output
@@ -284,6 +323,7 @@ MonoBehaviour:
   inContext: target
   outContext: 
   overwriteOut: 1
+  failNullCtx: 0
   shotPower: 6
   passPower: 4
 --- !u!114 &6702865750709678192
@@ -299,7 +339,7 @@ MonoBehaviour:
   m_Name: Is Closest To Ball
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -664, y: -120}
+  position: {x: -712, y: -264}
   ports:
     keys:
     - output
@@ -310,7 +350,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: conditions 0
-        node: {fileID: 3862937773836023354}
+        node: {fileID: 3047129182384201490}
         reroutePoints: []
       _direction: 1
       _connectionType: 1
@@ -330,7 +370,7 @@ MonoBehaviour:
   m_Name: Move To Ball
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1016, y: -104}
+  position: {x: -808, y: -136}
   ports:
     keys:
     - output
@@ -351,3 +391,4 @@ MonoBehaviour:
   inContext: 
   outContext: 
   overwriteOut: 1
+  failNullCtx: 0

@@ -6,13 +6,12 @@ namespace BTree
 	/// <summary>
 	/// Chooses a child that is able to run and returns its result. If all children fail, returns failure.
 	/// </summary>
-	public class Selector : TreeNode
+	public class Selector : Branch
 	{
         [SerializeField, Input(dynamicPortList: true, connectionType: ConnectionType.Override)]
         protected TreeResponse input;
 
         private int index;
-        private TreeResponse storedResponse = null;
 
         private bool HasNextChild => index + 1 < children.Length;
 
@@ -29,9 +28,15 @@ namespace BTree
             index = 0;
             var response = GetChildResponseAtIndex(index);
 
-            if (response == null) { return null; }
+            if (response.Result == Result.Success)
+            {
+                // Only allow a single success to return.
+                storedResponse = response;
+                return storedResponse;
+            }
 
-            return Resolve(response);
+            var resolved = Resolve(response);
+            return ResolveConditions(resolved);
         }
 
 		private TreeResponse Resolve(TreeResponse response)
@@ -40,13 +45,6 @@ namespace BTree
             {
                 // If child is running or waiting, send it on as is.
                 return response;
-            }
-
-            if (response.Result == Result.Success)
-            {
-                // Only allow a single success to return.
-                storedResponse = response;
-                return storedResponse;
             }
 
             if (response.Result == Result.Failure)
@@ -60,8 +58,7 @@ namespace BTree
                 }
             }
 
-            storedResponse = response;
-            return storedResponse;
+            return response;
         }
 	}
 }

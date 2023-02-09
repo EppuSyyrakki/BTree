@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Is Friend Defending
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1640, y: 152}
+  position: {x: -1816, y: 120}
   ports:
     keys:
     - output
@@ -24,7 +24,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: conditions 0
-        node: {fileID: 7292398556640764815}
+        node: {fileID: 890254179727020999}
         reroutePoints: []
       _direction: 1
       _connectionType: 1
@@ -44,13 +44,15 @@ MonoBehaviour:
   m_Name: Selector
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -968, y: 232}
+  position: {x: -728, y: 136}
   ports:
     keys:
     - input
     - output
     - input 0
     - input 1
+    - conditions
+    - conditions 0
     values:
     - _fieldName: input
       _node: {fileID: -5010755348403511271}
@@ -66,8 +68,8 @@ MonoBehaviour:
       _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
-      - fieldName: input
-        node: {fileID: -970945788928382696}
+      - fieldName: input 1
+        node: {fileID: -1849922110862241298}
         reroutePoints: []
       _direction: 1
       _connectionType: 1
@@ -79,7 +81,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: output
-        node: {fileID: 7292398556640764815}
+        node: {fileID: 890254179727020999}
         reroutePoints: []
       _direction: 0
       _connectionType: 1
@@ -92,6 +94,27 @@ MonoBehaviour:
       connections:
       - fieldName: output
         node: {fileID: -2769986046882326684}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: conditions
+      _node: {fileID: -5010755348403511271}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: conditions 0
+      _node: {fileID: -5010755348403511271}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 5244634927357565368}
         reroutePoints: []
       _direction: 0
       _connectionType: 1
@@ -110,7 +133,7 @@ MonoBehaviour:
   m_Name: Move To Space
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1272, y: 424}
+  position: {x: -1032, y: 328}
   ports:
     keys:
     - output
@@ -131,6 +154,7 @@ MonoBehaviour:
   inContext: 
   outContext: 
   overwriteOut: 1
+  failNullCtx: 0
   multiplier: 4
 --- !u!114 &-1849922110862241298
 MonoBehaviour:
@@ -152,6 +176,7 @@ MonoBehaviour:
     - output
     - input 0
     - input 1
+    - conditions
     values:
     - _fieldName: input
       _node: {fileID: -1849922110862241298}
@@ -192,12 +217,21 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: output
-        node: {fileID: -970945788928382696}
+        node: {fileID: -5010755348403511271}
         reroutePoints: []
       _direction: 0
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 1
+    - _fieldName: conditions
+      _node: {fileID: -1849922110862241298}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
 --- !u!114 &-970945788928382696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,6 +298,22 @@ MonoBehaviour:
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 1
+  output:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
+  children: []
+  initialized: 0
+  <Agent>k__BackingField: {fileID: 0}
+  conditions:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
+  input:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
+  conditionNodes: []
+  storedResponse:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,8 +336,6 @@ MonoBehaviour:
   - {fileID: 4373532451665837097}
   - {fileID: 1247909959696143846}
   - {fileID: -5010755348403511271}
-  - {fileID: 7292398556640764815}
-  - {fileID: -970945788928382696}
   - {fileID: 5244634927357565368}
 --- !u!114 &890254179727020999
 MonoBehaviour:
@@ -302,13 +350,15 @@ MonoBehaviour:
   m_Name: Sequence
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1640, y: 248}
+  position: {x: -1400, y: 152}
   ports:
     keys:
     - input
     - output
     - input 0
     - input 1
+    - conditions
+    - conditions 0
     values:
     - _fieldName: input
       _node: {fileID: 890254179727020999}
@@ -324,8 +374,8 @@ MonoBehaviour:
       _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
-      - fieldName: input
-        node: {fileID: 7292398556640764815}
+      - fieldName: input 0
+        node: {fileID: -5010755348403511271}
         reroutePoints: []
       _direction: 1
       _connectionType: 1
@@ -350,6 +400,27 @@ MonoBehaviour:
       connections:
       - fieldName: output
         node: {fileID: 2228007840240765931}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: conditions
+      _node: {fileID: 890254179727020999}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: conditions 0
+      _node: {fileID: 890254179727020999}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: -9076220317871772158}
         reroutePoints: []
       _direction: 0
       _connectionType: 1
@@ -419,7 +490,7 @@ MonoBehaviour:
   m_Name: Move To Defend
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1976, y: 216}
+  position: {x: -1896, y: 232}
   ports:
     keys:
     - output
@@ -440,6 +511,7 @@ MonoBehaviour:
   inContext: 
   outContext: 
   overwriteOut: 1
+  failNullCtx: 0
 --- !u!114 &2228007840240765931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -453,7 +525,7 @@ MonoBehaviour:
   m_Name: Idle
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1976, y: 376}
+  position: {x: -1896, y: 424}
   ports:
     keys:
     - output
@@ -474,6 +546,7 @@ MonoBehaviour:
   inContext: 
   outContext: 
   overwriteOut: 1
+  failNullCtx: 0
 --- !u!114 &4373532451665837097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +564,7 @@ MonoBehaviour:
   ports:
     keys:
     - output
+    - conditions
     values:
     - _fieldName: output
       _node: {fileID: 4373532451665837097}
@@ -501,6 +575,15 @@ MonoBehaviour:
         node: {fileID: -1849922110862241298}
         reroutePoints: []
       _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: conditions
+      _node: {fileID: 4373532451665837097}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 0
@@ -518,7 +601,7 @@ MonoBehaviour:
   m_Name: Is Closest To Ball
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -984, y: 40}
+  position: {x: -1048, y: 72}
   ports:
     keys:
     - output
@@ -529,7 +612,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: conditions 0
-        node: {fileID: -970945788928382696}
+        node: {fileID: -5010755348403511271}
         reroutePoints: []
       _direction: 1
       _connectionType: 1
@@ -602,3 +685,19 @@ MonoBehaviour:
       _connectionType: 1
       _typeConstraint: 0
       _dynamic: 1
+  output:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
+  children: []
+  initialized: 0
+  <Agent>k__BackingField: {fileID: 0}
+  conditions:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
+  input:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0
+  conditionNodes: []
+  storedResponse:
+    <Conditions>k__BackingField: []
+    <Result>k__BackingField: 0

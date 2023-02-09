@@ -1,37 +1,37 @@
-﻿using System.Collections.Generic;
-using XNode;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace BTree
 {
-    /// <summary>
-    /// 
-    /// </summary>    
-	public class While : TreeNode
-	{
+    public abstract class Branch : TreeNode
+    {
         [SerializeField, Input(dynamicPortList: true, connectionType: ConnectionType.Override)]
         private TreeResponse conditions;
 
-        [SerializeField, Input(dynamicPortList: false, connectionType: ConnectionType.Override)]
-        private TreeResponse input;
+        protected List<Condition> conditionNodes = null;
+        protected TreeResponse storedResponse = null;
 
-        private List<Condition> conditionNodes = null;
-        private TreeResponse storedResponse = null;
+        private bool CheckOwnConditions()
+        {
+            foreach (var condition in conditionNodes)
+            {
+                if (!condition.Check())
+                {
+                    return false;
+                }
+            }
 
-        public override object GetValue(NodePort port)
-		{
-            if (!initialized) { return null; }
-            
-            if (storedResponse != null) { return storedResponse; }
+            return true;
+        }
 
-            var response = GetChildResponse();
-
+        protected TreeResponse ResolveConditions(TreeResponse response)
+        {
             if (response.Result != Result.Failure)
             {
                 // Not a failure, so check conditions
-                response.Conditions.AddRange(conditionNodes);
-
-                if (!response.CheckConditions())
+                if (!CheckOwnConditions())
                 {
                     // Conditions failed, so pass failure
                     response.Result = Result.Failure;
@@ -39,16 +39,13 @@ namespace BTree
                     storedResponse = response;
                     return storedResponse;
                 }
-            }
-            else
-            {
-                // Failure, cache response and send. No need to check conditions.
-                storedResponse = response;
-                return response;
+
+                // conditions passed
+                response.Conditions.AddRange(conditionNodes);
             }
 
             return response;
-		}
+        } 
 
         protected override TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.
         {
@@ -64,21 +61,16 @@ namespace BTree
                     if (node is Condition condition)    // add conditions to a separate list.
                     {
                         condition.Host = this;
-                        conditionNodes.Add(condition);                        
+                        conditionNodes.Add(condition);
                     }
                     else
                     {
                         connectedChildren.Add(node);
-                    }                   
+                    }
                 }
             }
 
             return connectedChildren.ToArray();
-        }
-
-        internal override void ResetNode()
-        {
-            storedResponse = null;
         }
     }
 }

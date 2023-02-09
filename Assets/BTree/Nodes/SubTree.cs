@@ -3,13 +3,12 @@ using XNode;
 
 namespace BTree
 {
-    public class SubTree : TreeNode
+    public class SubTree : Branch
     {
         [SerializeField]
         private TreeAsset subTree;
 
         private TreeAsset tree;
-        private TreeResponse storedResponse = null;
 
         protected override void Setup(TreeAgent agent)
         {
@@ -30,14 +29,7 @@ namespace BTree
 
             if (storedResponse != null) { return storedResponse; }
 
-            var response = tree.Root.Response;
-
-            if (response.Result == Result.Failure || response.Result == Result.Success)
-            {
-                storedResponse = response;
-                return storedResponse;
-            }
-
+            var response = ResolveConditions(tree.Root.Response);
             return response;
         }
 

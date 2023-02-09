@@ -14,7 +14,7 @@ namespace BTree
         [SerializeField]
         protected bool invert;
 
-        internal While Host { get; set; }
+        internal Branch Host { get; set; }
         
         internal bool Check()
         {
