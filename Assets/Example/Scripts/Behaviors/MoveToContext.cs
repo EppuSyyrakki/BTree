@@ -10,12 +10,12 @@ public class MoveToContext : Leaf<Ball>
     private Player player;
     Vector3 target = default;
 
-    protected override void OnSetup() 
+    protected override void OnSetup()
     {
         player = Agent as Player;
     }
 
-    protected override void OnEnter() 
+    protected override void OnEnter()
     {
         if (Agent.debugTree) { Debug.LogWarning(Agent + " started MoveToContext action!"); }
 

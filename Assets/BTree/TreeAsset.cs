@@ -3,13 +3,13 @@ using XNode;
 
 namespace BTree
 {
-	/// <summary>
-	/// Used in the editor to predefine the behaviour tree. Is copied as a scene asset to agents on Awake()
-	/// </summary>
-	[CreateAssetMenu(fileName = "New Behaviour Tree", menuName = "BTree/New Behaviour Tree")]
-	//[RequireNode(typeof(Root))]
-	public class TreeAsset : NodeGraph
-	{
+    /// <summary>
+    /// Used in the editor to predefine the behaviour tree. Is copied as a scene asset to agents on Awake()
+    /// </summary>
+    [CreateAssetMenu(fileName = "New Behaviour Tree", menuName = "BTree/New Behaviour Tree")]
+    //[RequireNode(typeof(Root))]
+    public class TreeAsset : NodeGraph
+    {
         private TreeAgent agent;
         private bool isInterrupted = false;
         private bool forcedReset = false;
@@ -31,9 +31,9 @@ namespace BTree
         /// <returns>True if runnable response found, false if not.</returns>
         internal bool Evaluate(out TreeResponse response)
         {
-            if (forcedReset) 
-            { 
-                ResetNodes(); 
+            if (forcedReset)
+            {
+                ResetNodes();
             }
 
             if (isInterrupted)
@@ -42,7 +42,7 @@ namespace BTree
 
                 isInterrupted = false;
                 forcedReset = interruption.ForceReset;
-                response = interruption.Response;                
+                response = interruption.Response;
                 return true;
             }
 
@@ -63,7 +63,7 @@ namespace BTree
         }
 
         internal void Initialize(TreeAgent agent)
-		{
+        {
             this.agent = agent;
             Root = nodes.Find(x => x is Root) as Root;
             Root.RecursiveSetup(agent);

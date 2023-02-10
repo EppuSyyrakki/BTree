@@ -23,6 +23,6 @@ namespace BTree
     {
         public ContextNullException() { }
         public ContextNullException(string message) : base(message) { }
-        public ContextNullException (string message, Exception innerException) : base(message, innerException) { }
+        public ContextNullException(string message, Exception innerException) : base(message, innerException) { }
     }
 }

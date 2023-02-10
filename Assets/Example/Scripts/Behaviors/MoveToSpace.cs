@@ -52,7 +52,7 @@ public class MoveToSpace : Leaf<ITreeContext>
 
     private Transform GetGoalTransform(Player player)
     {
-        if ((player.OwnGoal.Position - player.Ball.Position).sqrMagnitude > 
+        if ((player.OwnGoal.Position - player.Ball.Position).sqrMagnitude >
             (player.OpponentGoal.Position - player.Ball.Position).sqrMagnitude
             && Random.Range(0, 2.5f) > player.AttackWeight)
         {

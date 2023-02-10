@@ -13,7 +13,7 @@ public class Idle : Leaf<ITreeContext>
     {
         idleTime += Time.deltaTime;
 
-        if (idleTime > maxDuration) { Response.Result = Result.Success; }        
+        if (idleTime > maxDuration) { Response.Result = Result.Success; }
     }
 
     protected override void OnExit() { }

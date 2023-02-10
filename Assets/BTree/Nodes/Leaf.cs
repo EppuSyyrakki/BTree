@@ -9,19 +9,19 @@ namespace BTree
     /// the agent do something from this class.
     /// </summary>
     [NodeTint(0.15f, 0.175f, 0.15f)]
-	public abstract class Leaf<T> : TreeNode, ILeaf where T : class, ITreeContext
+    public abstract class Leaf<T> : TreeNode, ILeaf where T : class, ITreeContext
     {
         [SerializeField, Tooltip("Negative value means indefinite.")]
         protected float maxDuration = -1f;
 
-		[SerializeField, Tooltip("Try to get a context with this name when entering this node.")]
-		private string inContext;
+        [SerializeField, Tooltip("Try to get a context with this name when entering this node.")]
+        private string inContext;
 
-		[SerializeField, Tooltip("Try to add a context with this name when exiting this node.")]
-		private string outContext;
+        [SerializeField, Tooltip("Try to add a context with this name when exiting this node.")]
+        private string outContext;
 
-		[SerializeField, Tooltip("If the Out Context already exists, overwrite it.")]
-		private bool overwriteOut = true;
+        [SerializeField, Tooltip("If the Out Context already exists, overwrite it.")]
+        private bool overwriteOut = true;
 
         [SerializeField, Tooltip("Fail if In Context is set to null")]
         private bool failNullCtx = false;
@@ -33,10 +33,10 @@ namespace BTree
 
         public event Func<bool> OnExceptionFail;
 
-        protected T Context 
-        { 
-            get 
-            { 
+        protected T Context
+        {
+            get
+            {
                 if (context == null) { throw new ContextNullException("Context possibly destroyed while running " + this); }
                 return context;
             }
@@ -44,7 +44,7 @@ namespace BTree
             {
                 if (failNullCtx && value == null) { throw new ContextNullException(this + " received a null Context"); }
                 context = value;
-            } 
+            }
         }
 
         protected sealed override void Setup(TreeAgent agent)
@@ -60,8 +60,8 @@ namespace BTree
         /// </summary>
         protected abstract void OnSetup();
 
-		public void Enter()
-		{
+        public void Enter()
+        {
             try
             {
                 if (!string.IsNullOrEmpty(inContext) && Agent.TryGetContext(inContext, out ITreeContext context))
@@ -112,7 +112,7 @@ namespace BTree
         protected abstract void OnExecute();
 
         public void Exit()
-		{
+        {
             try
             {
                 OnExit();
@@ -135,12 +135,12 @@ namespace BTree
         protected abstract void OnExit();
 
         internal sealed override void ResetNode()
-		{
+        {
             Response.Result = Result.Running;
             context = null;
             elapsed = 0;
             OnReset();
-		}
+        }
 
         /// <summary>
         /// Called after the base class receives a Reset() call. Base class handles resetting Response and nulling
@@ -174,14 +174,14 @@ namespace BTree
         /// context. Will NOT be called if execution encounters a null Context exception.
         /// </summary>
         protected abstract void OnFail();
-		
-		/// <summary>
-		/// Override this method to create checks that need to return a value while the tree is Evaluated.
+
+        /// <summary>
+        /// Override this method to create checks that need to return a value while the tree is Evaluated.
         /// Returning Success/Failure will make the tree skip Enter/Execute/Exit methods when it's being run.
-		/// </summary>
-		public sealed override object GetValue(NodePort port)
-		{	
-			return Response;
-		}
-	}
+        /// </summary>
+        public sealed override object GetValue(NodePort port)
+        {
+            return Response;
+        }
+    }
 }

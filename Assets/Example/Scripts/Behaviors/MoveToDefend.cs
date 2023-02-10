@@ -13,14 +13,14 @@ public class MoveToDefend : Leaf<ITreeContext>
     }
 
     protected override void OnEnter()
-    {      
+    {
         var pos = GetLocation();
-        target = player.MoveTo(pos);       
+        target = player.MoveTo(pos);
         timer = 0;
     }
 
     protected override void OnExecute()
-    {     
+    {
         if (player.Ball == null)
         {
             Response.Result = Result.Failure;
@@ -43,10 +43,10 @@ public class MoveToDefend : Leaf<ITreeContext>
         {
             Response.Result = Result.Success;
             player.IsDefending = false;
-        }        
+        }
     }
 
-    protected override void OnExit() 
+    protected override void OnExit()
     {
         player.IsDefending = false;
     }

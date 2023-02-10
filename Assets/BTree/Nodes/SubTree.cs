@@ -12,8 +12,8 @@ namespace BTree
 
         protected override void Setup(TreeAgent agent)
         {
-            if (subTree == null) 
-            { 
+            if (subTree == null)
+            {
                 Debug.LogError($"{agent} has an empty Sub Tree!");
                 return;
             }

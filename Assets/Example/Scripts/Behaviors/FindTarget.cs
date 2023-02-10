@@ -23,7 +23,7 @@ public class FindTarget : Leaf<ITreeContext>
         }
 
         if (!IsBlocked(player.OpponentGoal.Position))
-        {           
+        {
             Context = player.OpponentGoal;
             Draw(player.Position, Context.Position);
         }
@@ -36,7 +36,7 @@ public class FindTarget : Leaf<ITreeContext>
         {
             Response.Result = Result.Failure;
         }
-        
+
         Response.Result = Result.Success;
     }
 
@@ -54,7 +54,7 @@ public class FindTarget : Leaf<ITreeContext>
         foreach (var hit in hits)
         {
             if (hit.transform.TryGetComponent<Player>(out var found) && found.Side != player.Side)
-            {                
+            {
                 return true;
             }
         }

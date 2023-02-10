@@ -3,18 +3,18 @@ using UnityEngine;
 
 namespace BTree
 {
-	/// <summary>
-	/// The starting node of the behaviour tree. This is the first one accessed by the graph when evaluating.
-	/// </summary>
-	public class Root : TreeNode
-	{
+    /// <summary>
+    /// The starting node of the behaviour tree. This is the first one accessed by the graph when evaluating.
+    /// </summary>
+    public class Root : TreeNode
+    {
         [SerializeField, Input(dynamicPortList: true, connectionType: ConnectionType.Override)]
         public TreeResponse interruptions;
 
         [SerializeField, Input(dynamicPortList: false, connectionType: ConnectionType.Override)]
-		public TreeResponse input;
+        public TreeResponse input;
 
-		public TreeResponse Response => GetChildResponse();
+        public TreeResponse Response => GetChildResponse();
 
         private Dictionary<string, Interrupt> interruptNodes = null;
 
@@ -26,7 +26,7 @@ namespace BTree
             }
             else if (Agent.debugTree)
             {
-                Debug.LogWarning($"{Agent}.{this} could not find interrupt {interruptId}");               
+                Debug.LogWarning($"{Agent}.{this} could not find interrupt {interruptId}");
             }
 
             interrupt = null;
@@ -34,7 +34,7 @@ namespace BTree
         }
 
         protected override TreeNode[] GetChildNodes()
-		{
+        {
             List<TreeNode> connectedChildren = new List<TreeNode>();
             interruptNodes = new Dictionary<string, Interrupt>();
 
@@ -58,14 +58,14 @@ namespace BTree
             return connectedChildren.ToArray();
         }
 
-		protected override void Init()
-		{
-			name = $"{nameof(Root)} ({graph.name})";
+        protected override void Init()
+        {
+            name = $"{nameof(Root)} ({graph.name})";
 
             if (graph.nodes.FindAll(x => x is Root).Count > 1)
             {
                 Debug.LogError($"{Agent} found multiple root nodes in tree {graph.name}! Only one is allowed!");
             }
-		}
-	}
+        }
+    }
 }

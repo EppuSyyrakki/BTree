@@ -15,7 +15,7 @@ public class MoveToBall : Leaf<ITreeContext>
     }
 
     protected override void OnEnter()
-    {       
+    {
         var pos = GetLocation();
         target = player.MoveTo(pos);
         player.MovingToBall = true;

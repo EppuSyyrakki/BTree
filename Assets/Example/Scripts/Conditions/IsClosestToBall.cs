@@ -39,7 +39,7 @@ namespace Conditions
                     closest = friend;
                 }
             }
-           
+
             return self < closest;
         }
     }

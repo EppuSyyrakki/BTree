@@ -45,7 +45,7 @@ namespace BTree
             }
 
             return response;
-        } 
+        }
 
         protected override TreeNode[] GetChildNodes()    // Find all nodes connected to childPort ports.
         {

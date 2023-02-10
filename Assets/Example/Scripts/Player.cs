@@ -11,7 +11,7 @@ public class Player : TreeAgent
     [SerializeField]
     private Team team;
 
-    [SerializeField, Range(2,8)]
+    [SerializeField, Range(2, 8)]
     private float defensiveRange = 5f;
 
     [SerializeField, Range(0.1f, 2)]
@@ -53,7 +53,7 @@ public class Player : TreeAgent
         Vector3 pos;
         if (NavMesh.SamplePosition(position, out var hit, 4f, NavMesh.AllAreas))
         {
-            pos = hit.position;            
+            pos = hit.position;
         }
         else
         {

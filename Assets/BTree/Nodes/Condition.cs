@@ -15,7 +15,7 @@ namespace BTree
         protected bool invert;
 
         internal Branch Host { get; set; }
-        
+
         internal bool Check()
         {
             if (!initialized) { return false; }
@@ -32,7 +32,7 @@ namespace BTree
 
         public override object GetValue(NodePort port)
         {
-            return new TreeResponse(Check() ? Result.Success : Result.Failure); 
-        }  
+            return new TreeResponse(Check() ? Result.Success : Result.Failure);
+        }
     }
 }
