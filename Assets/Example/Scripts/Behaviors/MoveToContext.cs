@@ -50,7 +50,7 @@ public class MoveToContext : Leaf<Ball>
     private Vector3 GetTarget()
     {
         var rb = Context.gameObject.GetComponent<Rigidbody>();
-        Vector3 estimate = Context.transform.position + Time.deltaTime * rb.velocity * 20f;
+        Vector3 estimate = Context.Position + rb.velocity * 0.1f * (Context.Position - player.Position).sqrMagnitude * Time.deltaTime;
         return new Vector3(estimate.x, 0, estimate.z);
     }
 }

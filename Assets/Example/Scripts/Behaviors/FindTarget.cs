@@ -25,13 +25,12 @@ public class FindTarget : Leaf<ITreeContext>
         if (!IsBlocked(player.OpponentGoal.Position))
         {           
             Context = player.OpponentGoal;
-            Debug.DrawLine(player.Position, Context.Position, Color.black, 2f);
+            Draw(player.Position, Context.Position);
         }
-        else if (player.TeamMates.Count > 0)
+        else if (FindTeamMate(out var mate))
         {
-            Context = FindTeamMate();
-            var color = player.Side == Player.Team.Blue ? Color.blue : Color.red;
-            Debug.DrawLine(player.Position, Context.Position, color, 2f);
+            Context = mate;
+            Draw(player.Position, Context.Position);
         }
         else
         {
@@ -63,15 +62,23 @@ public class FindTarget : Leaf<ITreeContext>
         return false;
     }
 
-    private Player FindTeamMate()
+    private bool FindTeamMate(out Player teamMate)
     {
         foreach (var player in player.TeamMates)
         {
             if (IsBlocked(player.Position)) { continue; }
 
-            return player;
+            teamMate = player;
+            return true;
         }
 
-        return null;
+        teamMate = null;
+        return false;
+    }
+
+    private void Draw(Vector3 a, Vector3 b)
+    {
+        var color = player.Side == Player.Team.Blue ? Color.blue : Color.red;
+        Debug.DrawLine(a, b, color, 2f);
     }
 }

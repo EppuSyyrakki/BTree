@@ -69,6 +69,7 @@ MonoBehaviour:
   - {fileID: 5108141674240960780}
   - {fileID: 6702865750709678192}
   - {fileID: -5351374921706567882}
+  - {fileID: 6287261025707865563}
 --- !u!114 &538267512350864690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,6 +128,7 @@ MonoBehaviour:
     - input 2
     - conditions
     - conditions 0
+    - input 3
     values:
     - _fieldName: input
       _node: {fileID: 3047129182384201490}
@@ -201,6 +203,18 @@ MonoBehaviour:
       connections:
       - fieldName: output
         node: {fileID: 6702865750709678192}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 1
+    - _fieldName: input 3
+      _node: {fileID: 3047129182384201490}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 6287261025707865563}
         reroutePoints: []
       _direction: 0
       _connectionType: 1
@@ -326,6 +340,41 @@ MonoBehaviour:
   failNullCtx: 0
   shotPower: 6
   passPower: 4
+--- !u!114 &6287261025707865563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0036581d223871441bc57c5497e3053f, type: 3}
+  m_Name: Idle
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -808, y: 456}
+  ports:
+    keys:
+    - output
+    values:
+    - _fieldName: output
+      _node: {fileID: 6287261025707865563}
+      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: input 3
+        node: {fileID: 3047129182384201490}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+  maxDuration: 0.5
+  inContext: 
+  outContext: 
+  overwriteOut: 1
+  failNullCtx: 0
 --- !u!114 &6702865750709678192
 MonoBehaviour:
   m_ObjectHideFlags: 0

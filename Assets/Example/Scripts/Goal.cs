@@ -24,7 +24,7 @@ public class Goal : MonoBehaviour, ITreeContext
         get
         {
             var p = transform.position;
-            return new Vector3(p.x, 0, p.z);
+            return new Vector3(p.x, 1f, p.z);
         }
     }
 

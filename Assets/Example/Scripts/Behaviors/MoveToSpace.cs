@@ -27,6 +27,7 @@ public class MoveToSpace : Leaf<ITreeContext>
         Vector3 towards = (goal.position - player.transform.position).normalized * multiplier * 0.5f;
         random.y = 0;
         target = player.MoveTo(player.StartPos + random + towards);
+        Debug.DrawLine(target, player.Position, Color.white, 2f);
     }
 
     protected override void OnExecute()

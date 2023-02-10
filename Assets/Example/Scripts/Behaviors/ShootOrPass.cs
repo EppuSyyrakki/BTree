@@ -32,11 +32,11 @@ public class ShootOrPass : Leaf<ITreeContext>
         }
 
         float power = isGoal ? shotPower : passPower;
-        Vector3 dir = (Context.Position - rb.position).normalized;
-
-        Vector3 lead = isGoal ? Random.insideUnitSphere  * 2f: Context.gameObject.transform.forward * 2f;
+        Vector3 direction = Context.Position - rb.position;
+        Vector3 dir = direction.normalized * Mathf.Min(direction.magnitude, power);
+        Vector3 lead = isGoal ? Random.insideUnitSphere * 2f: Context.gameObject.transform.forward * 2f;
         Debug.DrawLine(Agent.transform.position, Agent.transform.position + dir, Color.blue, 2f);
-        rb.AddForce(dir * power + Vector3.up + lead, ForceMode.Impulse);
+        rb.AddForce(dir + Vector3.up + lead, ForceMode.Impulse);
         Response.Result = Result.Success;
     }
 
@@ -44,7 +44,7 @@ public class ShootOrPass : Leaf<ITreeContext>
 
     protected override void OnExit() 
     { 
-        if (Context is Player target)
+        if (Response.Result != Result.Failure && Context is Player target)
         {
             target.TriggerInterrupt("receivePass", player.Ball);
         }

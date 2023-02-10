@@ -47,15 +47,11 @@ namespace BTree
 
 		protected virtual void Start()
 		{
-            if (Tree.Evaluate(out current))
-            {
-                current.Origin.OnExceptionFail += TryEvaluate;
-                current.Origin.Enter();
-            }
-            else
+            if (!TryEvaluate())
             {
                 Debug.LogError(name + " failed to find a runnable Leaf in its Tree.");
             }
+
         }
 
         protected virtual void Update()
@@ -67,13 +63,16 @@ namespace BTree
 
             if (current.Result == Result.Running) { return; }
 
-			current.Origin.Exit();
+            current.Origin.Exit();
+            TryEvaluate();
 
-            if (!TryEvaluate())
-            {
-				Restart();
-                TryEvaluate();
-            }
+			//current.Origin.Exit();
+
+    //        if (!TryEvaluate())
+    //        {
+				//Restart();
+    //            TryEvaluate();
+    //        }
         }
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace BTree
             if (Tree.Evaluate(out TreeResponse next))
             {
 				if (current != null)
-				{
+				{					
 					current.Origin.OnExceptionFail -= TryEvaluate;
 				}
 				
