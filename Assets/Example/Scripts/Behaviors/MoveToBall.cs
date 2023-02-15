@@ -29,10 +29,11 @@ public class MoveToBall : Leaf<ITreeContext>
             return;
         }
 
-        if ((target - player.Ball.Position).sqrMagnitude > 2f)
+        if ((target - player.Ball.Position).magnitude > 1.4f)
         {
             var pos = GetLocation();
             target = player.MoveTo(pos);
+            Debug.DrawLine(player.Position, target, Color.black, 1f);
         }
 
         if ((player.transform.position - player.Ball.Position).sqrMagnitude < 3f)
@@ -48,10 +49,11 @@ public class MoveToBall : Leaf<ITreeContext>
 
     private Vector3 GetLocation()
     {
-        var goalToBall = player.Ball.Position - player.OpponentGoal.Position;
+        var rb = player.Ball.GetComponent<Rigidbody>();
+        var goalToBall = player.OwnGoal.Position - player.Ball.Position;
         var behindBall = player.Ball.Position + (goalToBall.normalized * 0.75f);
-
-        return behindBall;
+        var lead = rb.velocity * Time.fixedDeltaTime;
+        return behindBall + lead;
     }
 
     protected override void OnReset()

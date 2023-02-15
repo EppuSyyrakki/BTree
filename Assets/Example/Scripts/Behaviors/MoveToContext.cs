@@ -26,7 +26,7 @@ public class MoveToContext : Leaf<Ball>
     {
         var newTarget = GetTarget();
 
-        if ((newTarget - target).sqrMagnitude > 25f)
+        if ((newTarget - target).sqrMagnitude > 10f)
         {
             Debug.DrawLine(player.transform.position, newTarget, Color.yellow, 2f);
             target = player.MoveTo(newTarget);
@@ -49,8 +49,7 @@ public class MoveToContext : Leaf<Ball>
 
     private Vector3 GetTarget()
     {
-        var rb = Context.gameObject.GetComponent<Rigidbody>();
-        Vector3 estimate = Context.Position + rb.velocity * 0.1f * (Context.Position - player.Position).sqrMagnitude * Time.deltaTime;
+        var estimate = Context.Estimate;
         return new Vector3(estimate.x, 0, estimate.z);
     }
 }

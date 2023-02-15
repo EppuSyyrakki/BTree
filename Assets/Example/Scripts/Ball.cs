@@ -4,6 +4,12 @@ using UnityEngine;
 public class Ball : MonoBehaviour, ITreeContext
 {
     public bool Scored = false;
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     public Vector3 Position
     {
@@ -14,19 +20,11 @@ public class Ball : MonoBehaviour, ITreeContext
         }
     }
 
-    public bool IsCloseTo(Player.Team team, float distance = 2f, Player except = null)
+    public Vector3 Estimate
     {
-        var colliders = Physics.OverlapSphere(transform.position, distance);
-
-        foreach (var col in colliders)
+        get
         {
-            if (col.TryGetComponent<Player>(out var player) && player.Side == team)
-            {
-                if (except != null && player == except)
-                    return true;
-            }
+            return Position + rb.velocity * rb.mass / rb.drag;
         }
-
-        return false;
     }
 }
