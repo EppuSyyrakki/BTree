@@ -6,21 +6,22 @@ graph classes and the editor code to represent them visually in a specialised Un
 classes, allowing them to share any functionality present in the base classes. However, as noted in XNode’s documentation, its built-in functionality is 
 limited to viewing and editing graphs, so the node logic and the system querying the tree is implemented with custom code.
 
-## General information
+## What is a Behaviour Tree?
 The behaviour tree (also called a decision tree) can be described as a graph: a tree of hierarchical nodes that control the flow of decision making of an AI 
 entity. The extents of the tree, the leaves, are the actual commands that control the AI entity, and the branches are various types of utility nodes that 
-control the flow of the AI query to reach the sequences of commands best suited to the situation.
+control the flow of the AI query to reach the sequences of commands best suited to the situation. The user must implement the actionable leaf nodes themselves, 
+so this is NOT a visual scripting tool.
 
 In principle the AI entity sends a query from the root up the tree. When the query reaches an actionable leaf node, it returns one of three options: Success, 
 Failure, or Running. If the leaf is running (its action is being executed), the entity will stay in that state. When the node returns a success or a failure, 
 another query is sent to find the next “running” result. The branch nodes along the path can modify this result according to their own rules before sending it 
 on. For a leaf node to be reached, all the logic governing its preceding nodes must be satisfied as well. The implementation forces all nodes to inherit from 
-an abstract base class TreeNode. The tree is forced to accept only nodes that inherit TreeNode to prevent user errors. The user must implement these actionable 
-leaf nodes themselves, so this is NOT a visual scripting tool.
+an abstract base class TreeNode. The tree is forced to accept only nodes that inherit TreeNode to prevent user errors.
 
 ## Library architecture
 
-The library can be summarised in 10 base classes.
+The library can be summarised in 10 base classes (further information on implementing the system can be found in 
+[Implementation details](https://github.com/EppuSyyrakki/BTree#implementation-details)).
 
 ![Description of the library inheritance](ReadmeResources/lib_structure.png)
 
@@ -35,27 +36,27 @@ classes, and the turquoise node is a condition attached to a logic node. Functio
 close by.
 
 ### Nodes - TreeNode
-**TreeNode**
+#### TreeNode
 Base class that holds functionality shared between all nodes - a reference to the agent who owns the tree, a single output port to guide the query and 
-finding its possible children. The particulars of handling the delivery of the query result is left to each node type, depending on their function. 
+finding its possible children. The particulars of handling the delivery of the query result is left to each node type, depending on their function.
 
-**Leaf**
+#### Leaf
 An actionable node - an object that can be hotswapped to the agent. Any node inheriting from it holds practical code for an agent to interact with the world, 
 or some other way for the agent to act. Any branch of logic should always end in a Leaf.
 
-**Branch**
+#### Branch
 Reserved for nodes that handle the tree logic, such as sequence or selector. Any Branch can have Conditions attached. Users can implement their own Branch 
 nodes, but the functionality present in the included Branch nodes can already cover a wide range of cases.
 
-**Condition**
+#### Condition
 Signifies a boolean operation that is run on every frame. If it fails, the branch it is attached to fails as well. Conditions can also be used as Leaf nodes - 
 in this case they are checked only when that Leaf is checked instead of being checked continually while another Leaf is being executed.
 
-**Root**
+#### Root
 The starting place for every query, and the only node the TreeAsset has a direct reference to. A tree both requires one of, and has no more than one Root in 
 them.
 
-**Interrupt**
+#### Interrupt
 A special type. It can’t be reached through the tree’s normal query, but can be forced to launch from outside the tree. In the example project, receiving a 
 pass is handled with an interrupt: The agent passing the ball triggers an interrupt on the agent chosen to receive the pass. The ability to stop execution 
 and jump to a different Leaf enables a significant part of event-driven behaviour trees’ functionality.
@@ -67,12 +68,12 @@ be added to a Unity GameObject as a component. Most functionality is extendable 
 agent. The example project does this with the Player class.
 
 As a ScriptableObject the tree is a shared entity, it needs to be copied to a run-time instance when the game is played, or any changes made to the graph are 
-permanent and will affect all agents using it. In the implementation, this copying is the responsibility of the agent. Another important consideration for the 
-agent class is timing. To avoid null reference errors in the execution where some object doesn’t exist as it’s being accessed, evaluating the tree and changing 
-to a new Leaf must happen within the same call stack of methods - i.e. immediately. This ensures that the reference to the current Leaf is never null at runtime.
+permanent and will affect all agents using it. In the implementation, this copying is the responsibility of the agent. To avoid null reference errors in the 
+execution where some object doesn’t exist as it’s being accessed, evaluating the tree and changing to a new Leaf is done within the same call stack of 
+methods - i.e. immediately. This ensures that the reference to the current Leaf is never null at runtime.
 
 ### TreeResponse
-The TreeResponse class is a wrapper object that is returned by the Root when the tree is evaluated. Its creation is the responsibility of the Leaf class, as the 
+The TreeResponse class is a wrapper object that is returned to the agent when the tree is evaluated. Its creation is the responsibility of the Leaf class, as the 
 query ultimately reaches one through the logic branches. It holds a reference to the Leaf that created it, a Result enumeration (with possible values Running, 
 Success and Failure), and references to any Condition nodes it encountered in the branches en route to the Root. The agent then uses this response to first 
 check if any of the Conditions fail, and then to execute code in the origin Leaf.
@@ -100,23 +101,30 @@ situations such as initialization or forced failure.
 As with any Unity object, Leaf classes can use editor-assignable variables by using the SerializeField attribute. XNode restricts these variables to be either 
 prefabs or value types, as a Scriptable Object such as the TreeAsset or TreeNode classes cannot reference scene objects.
 
+The documentation within the scripts can provide further information on their usage and implementation that might not be expressed here.
+
 ### Implementing the Leaf class
 OnEnter, OnExit and OnExecute can be called on the same frame in different nodes. The Result of a node is checked immediately after calling the Execute 
 method on it. When that result is detected as not Running, OnExit is immediately called on that Leaf. The tree is then evaluated, and OnEnter is called on 
 the resulting new Leaf. In the next frame, this new Leaf’s OnExecute method is called and the Result checked again.
 
-The **OnEnter** method is called when a new Leaf is received from the tree. It can handle setting up variables for the OnExecute method or other initialization 
-specific to this particular execution of this node. At this point the possible context object is already fetched from the agent by the base Leaf class.
+#### OnEnter
+Called when an agent receives a new Leaf from the tree. It can handle setting up variables for the OnExecute method or other initialization specific to 
+this particular execution of this node (as opposed to OnInitialize that is called only once at startup). At this point any possible Context object is already 
+fetched from the agent by the base Leaf class.
 
-**OnExecute** drives the performance of an action. It is called on every frame by the agent, and might contain a code block that handles setting the Result. 
-For example, it could be set to Success on a “Move To” node if the agent is close to whichever target it was assigned. If a Max Duration is set on the node, 
-the base class will advance a timer and check if that duration is exceeded and fail the node, but only if the result is still marked as Running. This enables 
+#### OnExecute 
+Drives the performance of an action. It is called on every frame by the agent, and might contain a code block that handles setting the Result. For example, 
+it could be set to Success on a _Move To_ node if the agent is close to whichever target it was assigned. If a _Max Duration_ field is set on the node, the 
+base class will advance a timer and check if that duration is exceeded and fail the node, but only if the result is still marked as Running. This enables 
 inheritor classes to use the Max Duration field with their own timer to set a success result - the default implementation sets the Result as Failure if Max 
 Duration is exceeded.
 
-**OnExit** is called when the execution of a node ends. It can be used to reset any variables that were altered during the execution of this node, such as 
+#### OnExit 
+Called when the execution of a node ends. It can be used to reset any variables that were altered during the execution of this node, such as 
 custom timers. The base class will handle resetting any possible context used.
 
+#### Setting the Result property
 Changes to the result of a node are done through a property of the TreeResponse class named Response, which in turn has a property of a Result 
 enumerator with the possible values of Running, Success and Failure, as described previously.
 
@@ -127,7 +135,7 @@ OnEnter method.
 
 ### Creating a TreeAsset
 The TreeAsset is the template of the tree used by a TreeAgent, copied automatically to an instanced version at runtime. Users can create new TreeAssets from 
-Unity’s project window via the Create menu. Cloning existing trees is handled like any other asset cloning inside Unity.Once a TreeAsset is created, it can be 
+Unity’s project window via the Create menu. Cloning existing trees is handled like any other asset cloning inside Unity. Once a TreeAsset is created, it can be 
 edited in XNode’s editor window by opening the asset. In the editor window, new nodes can be added via right clicking the window. Connections between nodes 
 can be added by dragging from any **Output port** to another **Input port**. All paths of connections should eventually lead to the Root node.
 
