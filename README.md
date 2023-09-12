@@ -1,28 +1,21 @@
 # BTree
 **Behavior Tree AI editor for Unity**
 
+This library leans heavily on an external Unity library called [XNode](https://github.com/Siccity/xNode/wiki) by Thor Brigsted. It provides the base node and 
+graph classes and the editor code to represent them visually in a specialised Unity editor window. The graph and node inherit from XNode’s corresponding 
+classes, allowing them to share any functionality present in the base classes. However, as noted in XNode’s documentation, its built-in functionality is 
+limited to viewing and editing graphs, so the node logic and the system querying the tree is implemented with custom code.
+
 ## General information
 The behaviour tree (also called a decision tree) can be described as a graph: a tree of hierarchical nodes that control the flow of decision making of an AI 
 entity. The extents of the tree, the leaves, are the actual commands that control the AI entity, and the branches are various types of utility nodes that 
 control the flow of the AI query to reach the sequences of commands best suited to the situation.
 
 In principle the AI entity sends a query from the root up the tree. When the query reaches an actionable leaf node, it returns one of three options: Success, 
-failure, or running. If the leaf is running (its action is being executed), the entity will stay in that state. When the node returns a success or a failure, 
+Failure, or Running. If the leaf is running (its action is being executed), the entity will stay in that state. When the node returns a success or a failure, 
 another query is sent to find the next “running” result. The branch nodes along the path can modify this result according to their own rules before sending it 
-on. For a leaf node to be reached, all the logic governing its preceding nodes must be satisfied as well. The utility nodes that guide the query towards the 
-leaves can be described as logic gates – for themselves to return a success to a preceding node, they might require all of the following nodes to return a 
-success (AND), only one to return a success (OR), invert the result (NOT) and so on.
-
-This library leans heavily on an external Unity library called [XNode](https://github.com/Siccity/xNode/wiki) by Thor Brigsted. It provides the base node and 
-graph classes and the editor code to represent them visually in a specialised Unity editor window. The graph and node inherit from XNode’s corresponding 
-classes, allowing them to share any functionality present in the base classes. However, as noted in XNode’s documentation, its built-in functionality is 
-limited to viewing and editing graphs, so the node logic and the system querying the tree is implemented with custom code.
-
-The graph is the primary component of the library, named TreeAsset in the implementation. As its base class XNode.NodeGraph inherits from Unity’s 
-ScriptableObject, its creation can be done with custom menu items inside the Unity project window. The nodes do not exist as instances on their own outside 
-the graph. While their inheritance also traces back to ScriptableObject, they can’t be created as independent assets. This behaviour can be altered by 
-implementations by adding the CreateAssetMenu attribute from the UnityEngine library to the nodes. The implementation forces all nodes to inherit from an 
-abstract base class TreeNode. The tree is forced to accept only nodes that inherit TreeNode to prevent user errors. The user must implement these actionable 
+on. For a leaf node to be reached, all the logic governing its preceding nodes must be satisfied as well. The implementation forces all nodes to inherit from 
+an abstract base class TreeNode. The tree is forced to accept only nodes that inherit TreeNode to prevent user errors. The user must implement these actionable 
 leaf nodes themselves, so this is NOT a visual scripting tool.
 
 ## Library architecture
@@ -70,7 +63,7 @@ and jump to a different Leaf enables a significant part of event-driven behaviou
 ### Agent - TreeAgent
 The TreeAgent class functions as an interface between the tree and Unity. It handles selecting and storing the tree and a reference to the current actionable 
 leaf, timing the queries to the tree, and changing the leaf to a new one returned by the query when needed. It inherits from MonoBehaviour, so it can 
-be added to a Unity GameObject as a component. Most functionality is extendable as virtual methods, making it possible to inherit from and customise the 
+be added to a Unity GameObject as a component. Most functionality is extendable as virtual methods, making it possible to inherit from and customise the 
 agent. The example project does this with the Player class.
 
 As a ScriptableObject the tree is a shared entity, it needs to be copied to a run-time instance when the game is played, or any changes made to the graph are 
@@ -135,7 +128,7 @@ OnEnter method.
 ### Creating a TreeAsset
 The TreeAsset is the template of the tree used by a TreeAgent, copied automatically to an instanced version at runtime. Users can create new TreeAssets from 
 Unity’s project window via the Create menu. Cloning existing trees is handled like any other asset cloning inside Unity.Once a TreeAsset is created, it can be 
-edited in XNode’s editor window by opening the asset. In the editor window, new nodes can be added via right clicking the window. Connections between nodes 
+edited in XNode’s editor window by opening the asset. In the editor window, new nodes can be added via right clicking the window. Connections between nodes 
 can be added by dragging from any **Output port** to another **Input port**. All paths of connections should eventually lead to the Root node.
 
 ### Node logic flow
@@ -168,14 +161,14 @@ pass the result on, or simply alter that result to Running and move on to the ne
 
 #### Selector and Sequence child priority
 **Selector** and **Sequence** are both priority-enabled nodes. This means they will start examining their children in order from top to bottom, enabling a 
-user to prioritise some actions over others if conditions remain the same.
+user to prioritise some actions over others if conditions remain the same.
 
 #### Sub Tree
 A convenience node that represents another TreeAsset. The node will in practical terms act as another tree’s Root node. This feature can be used to recycle 
 behaviours and to reduce the visual complexity of any tree.
 
 ### Using a Context
-A Context container is used in the TreeAgent to store the internal context objects of that tree. The container is cleared every time the tree is reset.
+A Context container is used in the TreeAgent to store the internal context objects of that tree. The container is cleared every time the tree is reset.
 Leaf is a generic class that can take the type of the context object it uses as the generic type. Any class intended for use as a context object must implement 
 ITreeContext interface, but the ITreeContext interface can also be used as the generic type for the Leaf class if the user does not want to specify a type. The 
 interface is very simple, requiring only a GameObject property named gameObject, so it will work without further setup on any MonoBehaviour script.
@@ -189,7 +182,5 @@ Two nodes in the example project utilising the Context fields. The left node set
 
 Once a context object has been added, it can be used in other nodes later in the execution order by specifying the same identifier to the In Context field on 
 the node. The Leaf class will try to fetch the object from the Context container, and set it to the Context property of the class before calling OnEnter on the 
-node. While the user must take care in creating logically sound trees, the context system has a built in safety feature that Resets the tree when an agent 
+node. While the user must take care in creating logically sound trees, the context system has a built in safety feature that Resets the tree when an agent 
 tries to use a context object that is null. This feature works through a special Exception case and its handling within a Try/Catch block.
-
-
