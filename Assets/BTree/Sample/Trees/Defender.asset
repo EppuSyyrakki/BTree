@@ -20,7 +20,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: -9076220317871772158}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: conditions 0
@@ -56,7 +56,7 @@ MonoBehaviour:
     values:
     - _fieldName: input
       _node: {fileID: -5010755348403511271}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -65,7 +65,7 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: output
       _node: {fileID: -5010755348403511271}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 1
@@ -101,7 +101,7 @@ MonoBehaviour:
       _dynamic: 1
     - _fieldName: conditions
       _node: {fileID: -5010755348403511271}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: -2769986046882326684}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 1
@@ -180,7 +180,7 @@ MonoBehaviour:
     values:
     - _fieldName: input
       _node: {fileID: -1849922110862241298}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -189,7 +189,7 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: output
       _node: {fileID: -1849922110862241298}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input
@@ -225,7 +225,7 @@ MonoBehaviour:
       _dynamic: 1
     - _fieldName: conditions
       _node: {fileID: -1849922110862241298}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -362,7 +362,7 @@ MonoBehaviour:
     values:
     - _fieldName: input
       _node: {fileID: 890254179727020999}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -371,7 +371,7 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: output
       _node: {fileID: 890254179727020999}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 0
@@ -407,7 +407,7 @@ MonoBehaviour:
       _dynamic: 1
     - _fieldName: conditions
       _node: {fileID: 890254179727020999}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -449,7 +449,7 @@ MonoBehaviour:
     values:
     - _fieldName: interruptions
       _node: {fileID: 1247909959696143846}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -458,7 +458,7 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: input
       _node: {fileID: 1247909959696143846}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: output
@@ -470,7 +470,7 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: output
       _node: {fileID: 1247909959696143846}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 1
@@ -497,7 +497,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: 1687354043174510921}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 0
@@ -532,7 +532,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: 2228007840240765931}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 1
@@ -568,7 +568,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: 4373532451665837097}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 0
@@ -580,7 +580,7 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: conditions
       _node: {fileID: 4373532451665837097}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -608,7 +608,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: 5244634927357565368}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: conditions 0

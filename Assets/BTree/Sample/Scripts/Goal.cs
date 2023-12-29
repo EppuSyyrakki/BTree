@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BTree;
-using TMPro;
 
 public class Goal : MonoBehaviour, ITreeContext
 {
@@ -11,9 +10,6 @@ public class Goal : MonoBehaviour, ITreeContext
 
     [SerializeField]
     private LayerMask ballLayer;
-
-    [SerializeField]
-    private TMP_Text opponentScoreLabel;
 
     private Light goalLight;
     private BallSpawner spawner = null;
@@ -45,10 +41,11 @@ public class Goal : MonoBehaviour, ITreeContext
     {
         if (other.TryGetComponent(out Ball b) && !b.Scored)
         {
-            scoredToThis++;
-            opponentScoreLabel.text = scoredToThis.ToString();
+            scoredToThis++;          
             b.Scored = true;
             StartCoroutine(FlashLight(b));
+            var team = this.team == Player.Team.Red ? "Blue" : "Red";
+            Debug.Log($"GOAL! {team} team score: {scoredToThis}");
         }
     }
 

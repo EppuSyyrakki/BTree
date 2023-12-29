@@ -6,6 +6,11 @@ graph classes and the editor code to represent them visually in a specialised Un
 classes, allowing them to share any functionality present in the base classes. However, as noted in XNode’s documentation, its built-in functionality is 
 limited to viewing and editing graphs, so the node logic and the system querying the tree is implemented with custom code.
 
+## Installation
+Available as a simple
+[.unitypackage](https://drive.google.com/file/d/13Zq_ah6WiDqZTAcJtHV-4u24WhV3P7z6/view?usp=sharing) (includes the XNode library). Alternatively, download this 
+repository and open as a Unity project (created with version 2022.3.1f1).
+
 ## What is a Behaviour Tree?
 The behaviour tree (also called a decision tree) can be described as a graph: a tree of hierarchical nodes that control the flow of decision making of an AI 
 entity. The extents of the tree, the leaves, are the actual commands that control the AI entity, and the branches are various types of utility nodes that 

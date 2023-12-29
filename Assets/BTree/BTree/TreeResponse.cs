@@ -11,7 +11,7 @@ namespace BTree
     {
         public ILeaf Origin { get; private set; }
         public List<Condition> Conditions { get; private set; }
-        public Result Result { get; internal set; }
+        public Result Result { get; set; }
 
         internal TreeResponse(ILeaf origin) : this() { Origin = origin; }
         internal TreeResponse(Result result) : this() { Result = result; }

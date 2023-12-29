@@ -22,7 +22,7 @@ MonoBehaviour:
     values:
     - _fieldName: interruptions
       _node: {fileID: -5351374921706567882}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -31,7 +31,7 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: input
       _node: {fileID: -5351374921706567882}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: output
@@ -43,7 +43,7 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: output
       _node: {fileID: -5351374921706567882}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 1
@@ -90,7 +90,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: 538267512350864690}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 1
@@ -132,7 +132,7 @@ MonoBehaviour:
     values:
     - _fieldName: input
       _node: {fileID: 3047129182384201490}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -141,7 +141,7 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: output
       _node: {fileID: 3047129182384201490}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input
@@ -189,7 +189,7 @@ MonoBehaviour:
       _dynamic: 1
     - _fieldName: conditions
       _node: {fileID: 3047129182384201490}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
       _direction: 0
@@ -323,7 +323,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: 5108141674240960780}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 2
@@ -360,7 +360,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: 6287261025707865563}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 3
@@ -395,7 +395,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: 6702865750709678192}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: conditions 0
@@ -426,7 +426,7 @@ MonoBehaviour:
     values:
     - _fieldName: output
       _node: {fileID: 7661469116178970705}
-      _typeQualifiedName: BTree.TreeResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      _typeQualifiedName: BTree.TreeResponse, BTree, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
       - fieldName: input 0
